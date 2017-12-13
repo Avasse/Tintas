@@ -1,4 +1,4 @@
-var HexGrid = require('../assets/hex-grid/src/hex-grid');
+var HexGrid = require('../../../src/hex-grid.js');
 
 var TileFactory = function () {
 	var _id = 0;
@@ -134,8 +134,8 @@ function App(options) {
 		tile = iter.next();
 	}
 
-	//this.attachMouseEvents();
-	//this.animateLeftToRight();
+	this.attachMouseEvents();
+	this.animateLeftToRight();
 }
 
 App.prototype.getTileImageByPos = function(x, y) {
