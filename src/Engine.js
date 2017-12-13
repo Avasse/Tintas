@@ -48,21 +48,21 @@ class Engine {
 
     signDiffX(x){
         if ((this.pion.getX() - x) > 0){
-            return 1;
+            return -1;
         }
         if ((this.pion.getX() - x) == 0){
             return 0
         }
-        return -1;
+        return 1;
     }
 
     signDiffY(y){
         if ((this.pion.getY() - y) > 0){
-            return 1;
+            return -1;
         }
         if((this.pion.getY() - y) == 0){
             return 0;
         }
-        return -1;
+        return 1;
     }
 }
