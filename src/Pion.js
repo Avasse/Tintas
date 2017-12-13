@@ -3,16 +3,16 @@ class Pion {
         this.x = x;
         this.y = y;
     }
-    get x(){
+    getX(){
         return this.x;
     }
-    get y(){
+    getY(){
         return this.y;
     }
-    set x(x){
+    setX(x){
         this.x = x;
     }
-    set y(y){
+    setY(y){
         this.y = y;
     }
 }
