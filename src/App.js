@@ -1,4 +1,4 @@
-var HexGrid = require('../assets/hex-grid/src/hex-grid');
+var HexGrid = require('../assets/hex-grid');
 
 var TileFactory = function () {
 	var _id = 0;
