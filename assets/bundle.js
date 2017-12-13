@@ -1,5 +1,8 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/src/App.js":[function(require,module,exports){
-var HexGrid = require('../assets/hex-grid/src/hex-grid');
+var HexGrid = require('../assets/hex-grid');
+
+var invalidPos = ['0.0', '1.0.5', '2.0', '4.0', '5.0.5', '6.0', '7.0.5', '8.0', '0.1', '1.1.5', '8.1', '0.2', '8.2', '8.3', '0.5', '0.6', '7.6.5', '8.6', '0.7', '1.7.5', '3.7.5', '7.7.5', '8.7']
+
 
 var TileFactory = function () {
 	var _id = 0;
@@ -7,7 +10,8 @@ var TileFactory = function () {
 		newTile: function () {
 			var tile = {
 				id: _id.toString(),
-				type: 'testTile'
+				type: 'testTile',
+				color: 'MACOULEUR'
 			};
 
 			_id += 1;
@@ -124,14 +128,17 @@ function App(options) {
 
 	var iter = this.hexGrid.getTileIterator();
 	var tile = iter.next();
-	var tilePos;
+	var tilePos, pos;
 	while (tile !== null) {
 		tilePos = this.hexGrid.getPositionById(tile.id);
-		tile.element = this.dtd.createDomTile(tilePos.x, tilePos.y);
-		this.dtd.setTileImage(
-			tile.element,
-			this.getTileImageByPos(tilePos.x, tilePos.y)
-		);
+		pos = tilePos.x + '.' + tilePos.y;
+		if (!invalidPos.includes(pos)){
+			tile.element = this.dtd.createDomTile(tilePos.x, tilePos.y);
+			this.dtd.setTileImage(
+				tile.element,
+				this.getTileImageByPos(tilePos.x, tilePos.y)
+			);
+		}
 		tile = iter.next();
 	}
 
@@ -152,7 +159,6 @@ App.prototype.getTileImageByPos = function(x, y) {
 	return './img/light-circle.png';
 };
 
-// NOT USED ACTUALLY
 App.prototype.attachMouseEvents = function() {
 	var iter = this.hexGrid.getTileIterator();
 	var tile = iter.next();
@@ -184,7 +190,6 @@ App.prototype.attachMouseEvents = function() {
 	}
 };
 
-// NOT USED ACTUALLY
 App.prototype.animateLeftToRight = function() {
 	var iter = this.hexGrid.getTileIterator();
 	var tile = iter.next();
@@ -204,16 +209,18 @@ App.prototype.animateLeftToRight = function() {
 	animationInterval = window.setInterval(animate, 50);
 };
 
-// NOT USED ACTUALLY
 App.prototype.animationComplete = function() {
 	if (typeof this.onAnimationComplete === 'function') {
 		this.onAnimationComplete.call(null, this);
 	}
 };
 
+App.prototype.test = function() {
+}
+
 module.exports = App;
 
-},{"../assets/hex-grid/src/hex-grid":1}],1:[function(require,module,exports){
+},{"../assets/hex-grid":1}],1:[function(require,module,exports){
 module.exports = (function () {
 	/**
 	* Exports a constructor taking an options object.
