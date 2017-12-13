@@ -1,0 +1,23 @@
+{
+  "name": "tintas",
+  "version": "1.0.0",
+  "description": "project tintas gal",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Avasse/Tintas.git"
+  },
+  "keywords": [
+    "game",
+    "tintas"
+  ],
+  "author": "simon, theo, alexandre, arnaud",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Avasse/Tintas/issues"
+  },
+  "homepage": "https://github.com/Avasse/Tintas#readme"
+}
