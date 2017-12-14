@@ -148,15 +148,8 @@ function App(options) {
 
 App.prototype.getTileImageByPos = function(x, y) {
 	// Results in a dark border.
-	if (x === 0 || x === this.width - 1 ||
-		y === 0 ||
-		(y === this.height - 1 && x % 2 === 0) ||
-		(y === this.height - 0.5 && x % 2 === 1)
-	) {
-		return './img/dark-circle.png';
-	}
 
-	return './img/light-circle.png';
+	return './img/vide.png';
 };
 
 App.prototype.attachMouseEvents = function() {
