@@ -189,6 +189,9 @@ _:-ms-input-placeholder, :root .demo-graph {
   width: 100%;
   box-shadow: 0 13px 32px rgba(0,0,0,0.12), 0 2px 16px rgba(0,0,0,0.24);
   margin-left: -0.5rem;
+  background-image:url(../../img/background.jpg);
+  background-repeat:no-repeat;
+  background-size: 100%;
 }
 
 .demo-updates {

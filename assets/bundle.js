@@ -73,8 +73,7 @@ var TileFactory = function () {
 	return {
 		newTile: function () {
 			var tile = {
-				id: _id.toString(),
-				type: 'testTile'
+				id: _id.toString()
 			};
 
 			_id += 1;
@@ -231,15 +230,15 @@ App.prototype.attachMouseEvents = function() {
 		if (!invalidPos.includes(pos)) {
 			tile.element.addEventListener("click", onTileClick, false);
 			tile.element.myParam1 = tile;
-            tile.element.myParam2 = tilePos.x;
-            tile.element.myParam3 = tilePos.y;
+			tile.element.myParam1.posX = tilePos.x;
+			tile.element.myParam1.posY = tilePos.y;
 		}
 		tile = iter.next();
 	}
 };
 
 var onTileClick = function(evt) {
-    console.log(evt.target.myParam1,evt.target.myParam2,evt.target.myParam3);
+    console.log(evt.target.myParam1);
 };
 
 App.prototype.animateLeftToRight = function() {
