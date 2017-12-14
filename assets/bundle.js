@@ -48,6 +48,18 @@ var pieces = [
 	}
 ];
 
+var empty = {
+    name : 'EMPTY',
+    id: 0,
+    src: './img/empty.png',
+    nb: 0
+};
+
+var pion = {
+	name : 'PION',
+	src: './img/pion.png'
+};
+
 var colours = [];
 
 var initColors = function () {
@@ -74,6 +86,7 @@ var TileFactory = function () {
 				id: _id.toString()
 			};
 
+			console.log(_id);
 			_id += 1;
 			return tile;
 		},
@@ -222,7 +235,9 @@ function App(options) {
 
 App.prototype.getTileColorByPos = function(x, y) {
 	// Results in a dark border.
-
+	console.log(x);
+    console.log(y);
+	console.log(this.hexGrid.getTileByCoords(x,y));
 
     return this.hexGrid.getTileByCoords(x,y).color;
 };
@@ -249,7 +264,12 @@ App.prototype.attachMouseEvents = function() {
 var onTileClick = function(evt) {
     console.log(evt.target.myApp.getTileColorByPos(evt.target.myParam1.posX,evt.target.myParam1.posY));
 
-    evt.target.myEngine.move(evt.target.myParam1.posX,evt.target.myParam1.posY,evt.target.myApp.getTileColorByPos(evt.target.myParam1.posX,evt.target.myParam1.posY) )
+    if (evt.target.myEngine.move(evt.target.myParam1.posX,evt.target.myParam1.posY,evt.target.myApp.getTileColorByPos(evt.target.myParam1.posX,evt.target.myParam1.posY))){
+
+
+        evt.target.myApp.dtd.setTileImage(evt.target.myApp.hexGrid.getTileByCoords(evt.target.myParam1.posX,evt.target.myParam1.posY).element, pion.src )
+
+	}
 };
 
 App.prototype.animateLeftToRight = function() {
@@ -458,6 +478,9 @@ module.exports = (function () {
 		}
 
 		if (this.isWithinBoundaries(x, y)) {
+			console.log(x)
+			console.log(y)
+			console.log((y * this.width) + x)
 			return this.tiles[(y * this.width) + x];
 		}
 
