@@ -156,11 +156,12 @@ _:-ms-input-placeholder, :root .demo-graph {
 
 .demo-cards {
   -webkit-align-items: flex-start;
-      -ms-flex-align: start;
-          align-items: flex-start;
+  -ms-flex-align: start;
+  align-items: flex-start;
   -webkit-align-content: flex-start;
-      -ms-flex-line-pack: start;
-          align-content: flex-start;
+  -ms-flex-line-pack: start;
+  align-content: flex-start;
+  height: 700px;  
 }
 .demo-cards .demo-separator {
   height: 32px;
@@ -175,6 +176,9 @@ _:-ms-input-placeholder, :root .demo-graph {
 }
 .demo-cards h3 {
   font-size: 1em;
+}
+.demo-updates {
+  height: 100%
 }
 .demo-updates .mdl-card__title {
   min-height: 200px;
