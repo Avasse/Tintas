@@ -58,17 +58,21 @@ class Engine {
     move(x,y, color){
         if (this.nbturn == 0){
             this.turn(x,y,color);
-            return true;
+            this.changePlayer();
+            return false;
         }
         if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y,color)) {
             if (this.movePlayer > 0) {
                 if (!this.verifColor(x, y, color, this.pion.getColor())) {
                     return false;
                 }
-                this.turn(x, y, color);
-                this.movePlayer++;
+            }
+            this.turn(x, y, color);
+            this.movePlayer++;
+            if(this.winner()){
                 return true;
             }
+            this.changePlayer();
         }
         return false;
     }
