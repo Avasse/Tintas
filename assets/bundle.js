@@ -228,16 +228,11 @@ function App(options) {
     this.engine = new Engine();
 	this.engine.init("Théo","Grishka")
 
-	console.log(this.engine);
-
 	this.attachMouseEvents();
 }
 
 App.prototype.getTileColorByPos = function(x, y) {
 	// Results in a dark border.
-	console.log(x);
-    console.log(y);
-	console.log(this.hexGrid.getTileByCoords(x,y));
 
     return this.hexGrid.getTileByCoords(x,y).color;
 };
@@ -481,7 +476,7 @@ module.exports = (function () {
 			console.log(x)
 			console.log(y)
 			console.log((y * this.width) + x)
-			return this.tiles[(y * this.width) + x];
+			return this.tiles[(Math.floor(y) * this.width) + x];
 		}
 
 		return null;
