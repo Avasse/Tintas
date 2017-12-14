@@ -8,6 +8,8 @@
 	<script type="text/javascript" charset="utf-8">
 		window.onload = function () {
 			// Create a new grid.
+
+
 			var App = require('/src/App.js');
 			var app = new App({
 				container: grid,
@@ -15,8 +17,6 @@
 				width: 9,
 				height: 8
 			});
-
-			app.initColors();
 
 			console.log(app.hexGrid.getTileById(0));
 			app.test();
