@@ -1,5 +1,3 @@
-let HexGrid = require('../assets/hex-grid');
-
 let pieces = [
     {
         name : 'VIDE',
@@ -54,24 +52,27 @@ let pieces = [
 let pion= { id : 0, src : './img/pion.png'}
 
 class Engine {
-    constructor(x,y){
+    constructor(){
     }
 
-    move( x, y){
-        if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y) && this.verifColor(x,y)){
+    move(x,y, color, colorpion){
+        if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y,color) && this.verifColor(x,y, color, colorpion) && (this.nbturn> 0)){
             this.pion.setX(x);
             this.pion.setY(y);
-            HexGrid.setTileImageByPos(x,y,pion.src);
-            //ajout de la couleur dans la pile du joueur
+            this.player[this.tokenPlayer].setTokenStack(color.id)
+            this.nbturn++;
+            return true;
+
         }
+        return false;
     }
 
-    firstturn(x,y){
+    turn(x,y, color) {
 
         this.pion.setX(x);
         this.pion.setY(y);
-        HexGrid.setTileImageByPos(x,y,pion.src);
-        this.player[this.tokenPlayer].setTokenStack()
+        this.nbturn++;
+        this.player[this.tokenPlayer].setTokenStack(color.id)
 
     }
 
@@ -93,13 +94,13 @@ class Engine {
         return (Math.abs(x - this.pion.getX()) == Math.abs(y - this.pion.getY()))
     }
 
-    verifNoPieceBefore(x,y){
+    verifNoPieceBefore(x,y, color){
         let positionX = this.pion.getX();
         let positionY = this.pion.getY();
         let signDiffX = this.signDiffX(x,y);
         let signDiffY = this.signDiffY(x,y);
         while(x != positionX && y != positionY){
-            if (HexGrid.getTileColorByPos(x,y) !== pieces[0].id){
+            if (color.id !== pieces[0].id){
                 return false;
             }
             positionX += signDiffX;
@@ -120,7 +121,7 @@ class Engine {
 
     signDiffY(y){
         if ((this.pion.getY() - y) > 0){
-            return -1;
+        return -1;
         }
         if((this.pion.getY() - y) == 0){
             return 0;
@@ -128,8 +129,11 @@ class Engine {
         return 1;
     }
 
-    verifColor(x,y){
-        return (HexGrid.getTileImageByPos(this.pion.getX(),this.pion.getY()) != (HexGrid.getTileImageByPos(x,y)));
+    getNbTurn
+
+
+    verifColor(x,y, color, colorpion){
+        return (colorpion != color.id);
     }
 
     init(namePlayer1, namePlayer2){
