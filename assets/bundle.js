@@ -7,8 +7,8 @@ var pieces = [
     {
         name : 'BLEU',
         id: 1,
-		    src: './img/blue.png',
-		    nb: 7
+		src: './img/blue.png',
+		nb: 7
     },
     {
         name : 'JAUNE',
@@ -72,7 +72,6 @@ var TileFactory = function () {
 	var _id = 0;
 	return {
 		newTile: function () {
-			console.log(_id);
 			var tile = {
 				id: _id.toString(),
 				type: 'testTile'
@@ -204,14 +203,12 @@ function App(options) {
 		pos = tilePos.x + '.' + tilePos.y;
 		if (!invalidPos.includes(pos)){
 			tile.element = this.dtd.createDomTile(tilePos.x, tilePos.y);
-			console.log(tile)
             tile.color = colours[i];
 			this.dtd.setTileImage(
 				tile.element,
 				tile.color.src
 			);
 			i++;
-			console.log(this.tile);
 		}
 		tile = iter.next();
 	}
