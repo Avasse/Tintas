@@ -239,7 +239,6 @@ App.prototype.attachMouseEvents = function() {
 };
 
 var onTileClick = function(evt) {
-
     console.log(evt.target.myParam1,evt.target.myParam2,evt.target.myParam3);
 };
 
