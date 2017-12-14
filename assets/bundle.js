@@ -3,6 +3,56 @@ var HexGrid = require('../assets/hex-grid');
 
 var invalidPos = ['0.0', '1.0.5', '2.0', '4.0', '5.0.5', '6.0', '7.0.5', '8.0', '0.1', '1.1.5', '8.1', '0.2', '8.2', '8.3', '0.5', '0.6', '7.6.5', '8.6', '0.7', '1.7.5', '3.7.5', '7.7.5', '8.7']
 
+var pieces = {
+    'VIDE': {
+        id: 0,
+		src: 'src',
+		nb: 7
+    }, 
+    'BLEU': {
+        id: 1,
+		src: 'src',
+		nb: 7
+    },
+    'JAUNE': {
+        id: 2,
+		src: 'src',
+		nb: 7
+    },
+    'ROUGE': {
+        id: 3,
+		src:'src',
+		nb: 7
+	},
+	'VERT': {
+		id: 4,
+		src: 'src',
+		nb: 7
+	},
+	'VIOLET': {
+		id: 5,
+		src: 'src',
+		nb: 7
+	},
+	'ORANGE': {
+		id: 6,
+		src: 'src',
+		nb: 7
+	},
+	'BLANC': {
+		id: 7,
+		src: 'src',
+		nb: 7
+	}
+};
+
+var colours = [];
+
+App.prototype.initColors = function () {
+	pieces.forEach(function (piece) {
+		console.log(piece);
+	})
+}
 
 var TileFactory = function () {
 	var _id = 0;
@@ -61,7 +111,10 @@ DomTileDrawer.prototype.createDomTile = function(xPos, yPos) {
 
 	tileDiv.style.backgroundSize = hexWidth + 'px ' + tileHeight  + 'px';
 
+	var tileImg = document.createElement('img');
+
 	this.parent.appendChild(tileDiv);
+	this.parent.appendChild(tileImg);
 
 	return tileDiv;
 };
