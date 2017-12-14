@@ -22,7 +22,7 @@ class Joueur{
     setTokenStack(id){
         this.tokenStack[id]++;
     }
-    getTokentStack(id){
+    getTokenStack(id){
         return this.tokenStack[id];
     }
 }

@@ -216,10 +216,11 @@ function App(options) {
 	this.attachMouseEvents();
 }
 
-App.prototype.getTileImageByPos = function(x, y) {
+App.prototype.getTileColorByPos = function(x, y) {
 	// Results in a dark border.
-	return './img/vide.png';
+	return this.getTileByCoords(x,y).color;
 };
+
 
 App.prototype.attachMouseEvents = function() {
 	var iter = this.hexGrid.getTileIterator();
