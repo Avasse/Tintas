@@ -154,14 +154,21 @@ _:-ms-input-placeholder, :root .demo-graph {
   color: #d9006e;
 }
 
+.mdl-layout__content {
+  display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: center;
+  align-content: center;
+  height: 100%;
+}
+
 .demo-cards {
-  -webkit-align-items: flex-start;
-  -ms-flex-align: start;
-  align-items: flex-start;
-  -webkit-align-content: flex-start;
-  -ms-flex-line-pack: start;
-  align-content: flex-start;
-  height: 700px;  
+  position: relative;
+  margin-left: 70px;
+  width: 50%;
+  height: 90%;
 }
 .demo-cards .demo-separator {
   height: 32px;
@@ -177,6 +184,13 @@ _:-ms-input-placeholder, :root .demo-graph {
 .demo-cards h3 {
   font-size: 1em;
 }
+
+#grid {
+  width: 100%;
+  box-shadow: 0 13px 32px rgba(0,0,0,0.12), 0 2px 16px rgba(0,0,0,0.24);
+  margin-left: -0.5rem;
+}
+
 .demo-updates {
   height: 100%
 }
