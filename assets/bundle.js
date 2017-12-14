@@ -109,14 +109,14 @@ DomTileDrawer.prototype.createDomTile = function(xPos, yPos) {
 	tileDiv.style.left = (xPos * hexWidth * 0.75) + 'px';
 	tileDiv.style.top = (yPos * tileHeight) + 'px';
 
-	tileDiv.style.backgroundSize = hexWidth + 'px ' + tileHeight  + 'px';
-
 	var tileImg = document.createElement('img');
-
+	tileImg.style.backgroundSize = hexWidth + 'px ' + tileHeight  + 'px';
+	tileImg.style.width = '100%';
+	tileImg.style.height = '100%';
 	this.parent.appendChild(tileDiv);
-	this.parent.appendChild(tileImg);
+	tileDiv.appendChild(tileImg)
 
-	return tileDiv;
+	return tileImg;
 };
 
 DomTileDrawer.prototype.setTileImage = function(element, imgFilename) {
@@ -124,6 +124,7 @@ DomTileDrawer.prototype.setTileImage = function(element, imgFilename) {
 		throw new Error('element is not an object');
 	}
 
+	element.src = imgFilename;
 	element.style.backgroundImage = 'url(' + imgFilename + ')';
 };
 
@@ -260,9 +261,6 @@ App.prototype.animationComplete = function() {
 		this.onAnimationComplete.call(null, this);
 	}
 };
-
-App.prototype.test = function() {
-}
 
 module.exports = App;
 
