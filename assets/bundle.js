@@ -66,7 +66,7 @@ var initColors = function () {
         colours[i] = colours[j];
         colours[j] = x;
     }
-}
+};
 
 var TileFactory = function () {
 	var _id = 0;
@@ -225,18 +225,23 @@ App.prototype.attachMouseEvents = function() {
 	var iter = this.hexGrid.getTileIterator();
 	var tile = iter.next();
 	while (tile !== null) {
+	    debugger;
 		tilePos = this.hexGrid.getPositionById(tile.id);
 		pos = tilePos.x + '.' + tilePos.y;
 		if (!invalidPos.includes(pos)) {
-			tile.element.addEventListener("click", onclick, false);
+			tile.element.addEventListener("click", onTileClick, false);
+			tile.element.myParam1 = tile;
+            tile.element.myParam2 = tilePos.x;
+            tile.element.myParam3 = tilePos.y;
 		}
 		tile = iter.next();
 	}
 };
 
-var onclick = function() {
-	console.log('hello');
-}
+var onTileClick = function(evt) {
+
+    console.log(evt.target.myParam1,evt.target.myParam2,evt.target.myParam3);
+};
 
 App.prototype.animateLeftToRight = function() {
 	var iter = this.hexGrid.getTileIterator();
