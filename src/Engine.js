@@ -55,25 +55,30 @@ class Engine {
     constructor(){
     }
 
-    move(x,y, color, colorpion){
-        if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y,color) && this.verifColor(x,y, color, colorpion) && (this.nbturn> 0)){
-            this.pion.setX(x);
-            this.pion.setY(y);
-
-            this.player[this.tokenPlayer].setTokenStack(color.id)
-            this.nbturn++;
+    move(x,y, color){
+        if (this.nbturn == 0){
+            this.turn(x,y,color);
             return true;
+        }
+        if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y,color)) {
+            if (this.movePlayer > 0) {
+                if (!this.verifColor(x, y, color, this.pion.getColor())) {
+                    return false;
+                }
+                this.turn(x, y, color);
+                this.movePlayer++;
+                return true;
+            }
         }
         return false;
     }
 
     turn(x,y, color) {
-
         this.pion.setX(x);
         this.pion.setY(y);
-        this.nbturn++;
+        this.pion.setColor(color.id);
         this.player[this.tokenPlayer].setTokenStack(color.id)
-
+        this.nbturn++;
     }
 
     verifPosition(x,y){
@@ -129,9 +134,6 @@ class Engine {
         return 1;
     }
 
-    getNbTurn
-
-
     verifColor(x,y, color, colorpion){
         return (colorpion != color.id);
     }
@@ -139,11 +141,27 @@ class Engine {
     init(namePlayer1, namePlayer2){
         this.player = new Joueur()[2];
         this.player[0] = new Joueur(namePlayer1);
-        this.player[1] = new Joueur(namePlayer1);
+        this.player[1] = new Joueur(namePlayer2);
         this.tokenPlayer = Math.random() >= 0.5;
-
         this.nbturn = 0;
+        this.movePlayer= 0;
+    }
 
-        //this.pion = new Pion(x,y); a initialiser au premier tour du joueur selectionner
+    changePlayer(){
+        this.movePlayer = 0;
+        this.tokenPlayer = !this.tokenPlayer;
+    }
+
+    winner(){
+        for (let i = 1;i<8;i++){
+            if(this.player[this.tokenPlayer].getTokenStack(i) == 7){
+                return true
+            }
+        }
+        return false;
+    }
+
+    getNbTurn(){
+        return this.nbturn;
     }
 }

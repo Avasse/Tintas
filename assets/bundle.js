@@ -52,11 +52,9 @@ var colours = [];
 
 var initColors = function () {
 	pieces.forEach(function (piece) {
-
 		for (var i = 0; i< 7; i++){
             colours.push(piece);
 		}
-
 	});
 
     var j, x, i;
