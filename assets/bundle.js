@@ -3,14 +3,79 @@ var HexGrid = require('../assets/hex-grid');
 
 var invalidPos = ['0.0', '1.0.5', '2.0', '4.0', '5.0.5', '6.0', '7.0.5', '8.0', '0.1', '1.1.5', '8.1', '0.2', '8.2', '8.3', '0.5', '0.6', '7.6.5', '8.6', '0.7', '1.7.5', '3.7.5', '7.7.5', '8.7']
 
+var pieces = [
+    {
+        name : 'BLEU',
+        id: 1,
+		    src: './img/blue.png',
+		    nb: 7
+    },
+    {
+        name : 'JAUNE',
+        id: 2,
+        src: './img/yellow.png',
+        nb: 7
+    },
+    {
+        name : 'ROUGE',
+        id: 3,
+        src:'./img/red.png',
+        nb: 7
+	},
+	{
+        name : 'VERT',
+        id: 4,
+        src: './img/green.png',
+        nb: 7
+	},
+	{
+		name : 'VIOLET',
+		id: 5,
+		src: './img/purple.png',
+		nb: 7
+	},
+	{
+        name : 'ORANGE',
+		id: 6,
+		src: './img/orange.png',
+		nb: 7
+	},
+	{
+        name : 'BLANC',
+		id: 7,
+		src: './img/white.png',
+		nb: 7
+	}
+];
+
+var colours = [];
+
+var initColors = function () {
+	pieces.forEach(function (piece) {
+
+		for (var i = 0; i< 7; i++){
+            colours.push(piece);
+		}
+
+	});
+
+    var j, x, i;
+    for (i = colours.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = colours[i];
+        colours[i] = colours[j];
+        colours[j] = x;
+    }
+}
+
 var TileFactory = function () {
 	var _id = 0;
 	return {
 		newTile: function () {
+			console.log(_id);
 			var tile = {
 				id: _id.toString(),
-				type: 'testTile',
-				color: 'MACOULEUR'
+				type: 'testTile'
 			};
 
 			_id += 1;
@@ -129,18 +194,24 @@ function App(options) {
 		tileSize: this.tileSize
 	});
 
+	initColors();
+
 	var iter = this.hexGrid.getTileIterator();
 	var tile = iter.next();
-	var tilePos, pos;
+	var tilePos, pos, i = 0;
 	while (tile !== null) {
 		tilePos = this.hexGrid.getPositionById(tile.id);
 		pos = tilePos.x + '.' + tilePos.y;
 		if (!invalidPos.includes(pos)){
 			tile.element = this.dtd.createDomTile(tilePos.x, tilePos.y);
+			console.log(tile)
+            tile.color = colours[i];
 			this.dtd.setTileImage(
 				tile.element,
-				this.getTileImageByPos(tilePos.x, tilePos.y)
+				tile.color.src
 			);
+			i++;
+			console.log(this.tile);
 		}
 		tile = iter.next();
 	}
