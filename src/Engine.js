@@ -59,10 +59,10 @@ class Engine {
         if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y,color) && this.verifColor(x,y, color, colorpion) && (this.nbturn> 0)){
             this.pion.setX(x);
             this.pion.setY(y);
+
             this.player[this.tokenPlayer].setTokenStack(color.id)
             this.nbturn++;
             return true;
-
         }
         return false;
     }
