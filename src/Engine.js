@@ -6,7 +6,7 @@ class Engine {
     }
 
     move(Pion, x, y){
-        if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y)){
+        if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y) && this.verifCoulor(x,y)){
             this.pion.setX(x);
             this.pion.setY(y);
             setTileImageByPos(x,y,VIDE)
@@ -37,7 +37,7 @@ class Engine {
         let signDiffX = this.signDiffX(x,y);
         let signDiffY = this.signDiffY(x,y);
         while(x != positionX && y != positionY){
-            if (HexGrid.setTileImageByPos(x,y) != VIDE){
+            if (HexGrid.getTileImageByPos(x,y) != VIDE){
                 return false;
             }
             positionX += signDiffX;
@@ -64,5 +64,9 @@ class Engine {
             return 0;
         }
         return 1;
+    }
+
+    verifCoulor(x,y){
+        return (HexGrid.getTileImageByPos(this.pion.getX(),this.pion.getY()) != (HexGrid.getTileImageByPos(x,y);
     }
 }
