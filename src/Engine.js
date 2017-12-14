@@ -57,10 +57,10 @@ class Engine {
 
     move(x,y, color){
 
-        console.log(this.nbturn)
+        console.log(this.nbturn);
         if (this.nbturn == 0){
             this.turn(x,y,color);
-            //this.changePlayer();
+            this.changePlayer();
             return true;
         }
         if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y,color)) {
@@ -84,7 +84,6 @@ class Engine {
         this.pion.setY(y);
         console.log(color);
         this.pion.setColor(color.id);
-        console.log(this.tokenPlayer)
         this.player[this.tokenPlayer].setTokenStack(color.id)
         this.nbturn++;
     }

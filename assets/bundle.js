@@ -86,7 +86,6 @@ var TileFactory = function () {
 				id: _id.toString()
 			};
 
-			console.log(_id);
 			_id += 1;
 			return tile;
 		},
@@ -233,7 +232,8 @@ function App(options) {
 
 App.prototype.getTileColorByPos = function(x, y) {
 	// Results in a dark border.
-
+	console.log(x)
+	console.log(y)
     return this.hexGrid.getTileByCoords(x,y).color;
 };
 
@@ -257,11 +257,10 @@ App.prototype.attachMouseEvents = function() {
 };
 
 var onTileClick = function(evt) {
-    console.log(evt.target.myApp.getTileColorByPos(evt.target.myParam1.posX,evt.target.myParam1.posY));
 
+	console.log(evt.target.myApp.hexGrid.getTileByCoords(evt.target.myParam1.posX,evt.target.myParam1.posY));
     if (evt.target.myEngine.move(evt.target.myParam1.posX,evt.target.myParam1.posY,evt.target.myApp.getTileColorByPos(evt.target.myParam1.posX,evt.target.myParam1.posY))){
-
-
+    	console.log("tour")
         evt.target.myApp.dtd.setTileImage(evt.target.myApp.hexGrid.getTileByCoords(evt.target.myParam1.posX,evt.target.myParam1.posY).element, pion.src )
 
 	}
@@ -472,10 +471,8 @@ module.exports = (function () {
 			throw new Error('x and y must be integers');
 		}
 
-		if (this.isWithinBoundaries(x, y)) {
-			console.log(x)
-			console.log(y)
-			console.log((y * this.width) + x)
+        console.log("boundaries")
+		if (this.isWithinBoundaries(x, Math.floor(y))) {
 			return this.tiles[(Math.floor(y) * this.width) + x];
 		}
 
