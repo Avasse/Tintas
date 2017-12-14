@@ -68,7 +68,7 @@ class Engine {
     turn(x,y, color) {
         this.pion.setX(x);
         this.pion.setY(y);
-        this.pion.setColor(color);
+        this.pion.setColor(color.id);
         this.player[this.tokenPlayer].setTokenStack(color.id)
         this.nbturn++;
     }
