@@ -1,18 +1,28 @@
 class Joueur{
-    constructor(name,score){
+    constructor(name){
         this.name = name;
-        this.score = score;
+        this.score = 0;
+        this.tokenStack = [];
+        for (let i =1;i<8;i++){
+            this.tokenStack[i] = 0;
+        }
     }
-    set name(name){
+    setName(name){
         this.name = name;
     }
-    get name(){
+    getName(){
         return this.name;
     }
-    set score(score){
+    setScore(score){
         this.score = score;
     }
-    get score(){
+    getScore(){
         return this.score;
+    }
+    setTokenStack(id){
+        this.tokenStack[id]++;
+    }
+    getTokentStack(id){
+        return this.tokenStack[id];
     }
 }
