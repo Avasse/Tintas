@@ -15,4 +15,10 @@ class Pion {
     setY(y){
         this.y = y;
     }
+    setColor(color){
+        this.color = color;
+    }
+    getColor(){
+        return this.color;
+    }
 }

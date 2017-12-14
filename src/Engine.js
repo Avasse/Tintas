@@ -44,13 +44,14 @@ let pieces = {
 };
 
 class Engine {
-    constructor(x,y){
+    constructor(){
     }
 
     move( x, y){
         if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y) && this.verifColor(x,y)){
             this.pion.setX(x);
             this.pion.setY(y);
+            HexGrid.getPositionByCoords(x,y);
             HexGrid.setTileImageByPos(x,y,PION);
             //ajout de la couleur dans la pile du joueur
         }
