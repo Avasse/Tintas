@@ -1,5 +1,40 @@
 let HexGrid = require('../assets/hex-grid');
-Piece = {VIDE :0, BLEU:1,JAUNE:2,ROUGE:3,VERT:4,VIOLET:5,ORANGE:6,BLANC:7,PION:8};
+
+Piece = {
+    VIDE: {
+        id: 0,
+        src: 'src',
+    },
+    BLEU: {
+        id: 1,
+        src: 'src',
+    },
+    JAUNE: {
+        id: 2,
+        src: 'src',
+    },
+    ROUGE: {
+        id: 3,
+        src: 'src',
+    },
+    VERT: {
+        id: 4,
+        src: 'src',
+    },
+    VIOLET: {
+        id: 5,
+        src: 'src',
+    },
+    ORANGE: {
+        id: 6,
+        src: 'src',
+    },
+    BLANC: {
+        id: 7,
+        src: 'src',
+    }
+};
+
 class Engine {
     constructor(x,y){
         this.pion = new Pion(x,y);
