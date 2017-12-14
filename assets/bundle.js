@@ -3,57 +3,6 @@ var HexGrid = require('../assets/hex-grid');
 
 var invalidPos = ['0.0', '1.0.5', '2.0', '4.0', '5.0.5', '6.0', '7.0.5', '8.0', '0.1', '1.1.5', '8.1', '0.2', '8.2', '8.3', '0.5', '0.6', '7.6.5', '8.6', '0.7', '1.7.5', '3.7.5', '7.7.5', '8.7']
 
-var pieces = {
-    'VIDE': {
-        id: 0,
-		src: 'src',
-		nb: 7
-    }, 
-    'BLEU': {
-        id: 1,
-		src: 'src',
-		nb: 7
-    },
-    'JAUNE': {
-        id: 2,
-		src: 'src',
-		nb: 7
-    },
-    'ROUGE': {
-        id: 3,
-		src:'src',
-		nb: 7
-	},
-	'VERT': {
-		id: 4,
-		src: 'src',
-		nb: 7
-	},
-	'VIOLET': {
-		id: 5,
-		src: 'src',
-		nb: 7
-	},
-	'ORANGE': {
-		id: 6,
-		src: 'src',
-		nb: 7
-	},
-	'BLANC': {
-		id: 7,
-		src: 'src',
-		nb: 7
-	}
-};
-
-var colours = [];
-
-App.prototype.initColors = function () {
-	pieces.forEach(function (piece) {
-		console.log(piece);
-	})
-}
-
 var TileFactory = function () {
 	var _id = 0;
 	return {
@@ -196,13 +145,11 @@ function App(options) {
 		tile = iter.next();
 	}
 
-	//this.attachMouseEvents();
-	//this.animateLeftToRight();
+	this.attachMouseEvents();
 }
 
 App.prototype.getTileImageByPos = function(x, y) {
 	// Results in a dark border.
-
 	return './img/vide.png';
 };
 
@@ -210,46 +157,35 @@ App.prototype.attachMouseEvents = function() {
 	var iter = this.hexGrid.getTileIterator();
 	var tile = iter.next();
 	while (tile !== null) {
-		tile.element.onmouseover = function(tile) {
-			return function () {
-				if (tile.selected !== true) {
-					this.dtd.setTileImage(tile.element, './img/dark-circle.png');
-				}
-			}.bind(this);
-		}.bind(this)(tile);
-
-		tile.element.onmouseout = function(tile) {
-			return function () {
-				if (tile.selected !== true) {
-					this.dtd.setTileImage(tile.element, './img/light-circle.png');
-				}
-			}.bind(this);
-		}.bind(this)(tile);
-
-		tile.element.onmousedown = function(tile) {
-			return function () {
-				tile.selected = true;
-				this.dtd.setTileImage(tile.element, './img/red-circle.png');
-			}.bind(this);
-		}.bind(this)(tile);
-
+		tilePos = this.hexGrid.getPositionById(tile.id);
+		pos = tilePos.x + '.' + tilePos.y;
+		if (!invalidPos.includes(pos)) {
+			tile.element.addEventListener("click", onclick, false);
+		}
 		tile = iter.next();
 	}
 };
+
+var onclick = function() {
+	console.log('hello');
+}
 
 App.prototype.animateLeftToRight = function() {
 	var iter = this.hexGrid.getTileIterator();
 	var tile = iter.next();
 	var animationInterval;
 
+	tilePos = this.hexGrid.getPositionById(tile.id);
+	pos = tilePos.x + '.' + tilePos.y;
+
 	var animate = function() {
-		if (tile === null) {
+		if (tile === null || !invalidPos.includes(pos)) {
 			window.clearInterval(animationInterval);
 			this.animationComplete();
 			return;
 		}
 
-		this.dtd.setTileImage(tile.element, './img/dark-circle.png');
+		//this.dtd.setTileImage(tile.element, './img/dark-circle.png');
 		tile = iter.next();
 	}.bind(this);
 
