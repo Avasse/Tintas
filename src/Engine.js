@@ -5,8 +5,8 @@ class Engine {
         this.pion = new Pion(x,y);
     }
 
-    move(Pion, x, y){
-        if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y) && this.verifCoulor(x,y)){
+    move( x, y){
+        if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y) && this.verifColor(x,y)){
             this.pion.setX(x);
             this.pion.setY(y);
             HexGrid.setTileImageByPos(x,y,PION);
@@ -66,7 +66,7 @@ class Engine {
         return 1;
     }
 
-    verifCoulor(x,y){
-        return (HexGrid.getTileImageByPos(this.pion.getX(),this.pion.getY()) != (HexGrid.getTileImageByPos(x,y);
+    verifColor(x,y){
+        return (HexGrid.getTileImageByPos(this.pion.getX(),this.pion.getY()) != (HexGrid.getTileImageByPos(x,y)));
     }
 }
