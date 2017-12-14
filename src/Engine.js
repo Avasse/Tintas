@@ -1,43 +1,50 @@
 let HexGrid = require('../assets/hex-grid');
 
-Piece = {
-    VIDE: {
+let pieces = {
+    'VIDE': {
         id: 0,
-        src: 'src',
+        src: 'vide.png',
+        nb: 7
     },
-    BLEU: {
+    'BLEU': {
         id: 1,
-        src: 'src',
+        src: 'blue.png',
+        nb: 7
     },
-    JAUNE: {
+    'JAUNE': {
         id: 2,
-        src: 'src',
+        src: 'yellow.png',
+        nb: 7
     },
-    ROUGE: {
+    'ROUGE': {
         id: 3,
-        src: 'src',
+        src:'red.png',
+        nb: 7
     },
-    VERT: {
+    'VERT': {
         id: 4,
-        src: 'src',
+        src: 'vert.png',
+        nb: 7
     },
-    VIOLET: {
+    'VIOLET': {
         id: 5,
-        src: 'src',
+        src: 'violet.png',
+        nb: 7
     },
-    ORANGE: {
+    'ORANGE': {
         id: 6,
-        src: 'src',
+        src: 'orange.png',
+        nb: 7
     },
-    BLANC: {
+    'BLANC': {
         id: 7,
-        src: 'src',
+        src: 'white.png',
+        nb: 7
     }
 };
 
 class Engine {
     constructor(x,y){
-        this.pion = new Pion(x,y);
     }
 
     move( x, y){
@@ -45,6 +52,7 @@ class Engine {
             this.pion.setX(x);
             this.pion.setY(y);
             HexGrid.setTileImageByPos(x,y,PION);
+            //ajout de la couleur dans la pile du joueur
         }
     }
 
@@ -103,5 +111,13 @@ class Engine {
 
     verifColor(x,y){
         return (HexGrid.getTileImageByPos(this.pion.getX(),this.pion.getY()) != (HexGrid.getTileImageByPos(x,y)));
+    }
+
+    init(namePlayer1, namePlayer2){
+        this.player1 = new Joueur(namePlayer1);
+        this.player2 = new Joueur(namePlayer2);
+        this.tokenPlayer = Math.random() >= 0.5;
+
+        //this.pion = new Pion(x,y); a initialiser au premier tour du joueur selectionner
     }
 }
