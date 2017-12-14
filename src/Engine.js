@@ -56,11 +56,19 @@ class Engine {
     }
 
     move(x,y, color){
-        if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y,color)
-            && this.verifColor(x,y, color, this.pion.getColor())
-            && (this.nbturn> 0)){
+        if (this.nbturn == 0){
             this.turn(x,y,color);
             return true;
+        }
+        if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y,color)) {
+            if (this.movePlayer > 0) {
+                if (!this.verifColor(x, y, color, this.pion.getColor())) {
+                    return false;
+                }
+                this.turn(x, y, color);
+                this.movePlayer++;
+                return true;
+            }
         }
         return false;
     }
@@ -136,8 +144,21 @@ class Engine {
         this.player[1] = new Joueur(namePlayer2);
         this.tokenPlayer = Math.random() >= 0.5;
         this.nbturn = 0;
+        this.movePlayer= 0;
+    }
 
-        //this.pion = new Pion(x,y); a initialiser au premier tour du joueur selectionner
+    changePlayer(){
+        this.movePlayer = 0;
+        this.tokenPlayer = !this.tokenPlayer;
+    }
+
+    winner(){
+        for (let i = 1;i<8;i++){
+            if(this.player[this.tokenPlayer].getTokenStack(i) == 7){
+                return true
+            }
+        }
+        return false;
     }
 
     getNbTurn(){
