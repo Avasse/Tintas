@@ -1,5 +1,5 @@
 let HexGrid = require('../assets/hex-grid');
-Piece = {VIDE :0, BLEU:1,JAUNE:2,ROUGE:3,VERT:4};
+Piece = {VIDE :0, BLEU:1,JAUNE:2,ROUGE:3,VERT:4,VIOLET:5,ORANGE:6,BLANC:7,PION:8};
 class Engine {
     constructor(x,y){
         this.pion = new Pion(x,y);
@@ -9,7 +9,7 @@ class Engine {
         if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y) && this.verifCoulor(x,y)){
             this.pion.setX(x);
             this.pion.setY(y);
-            setTileImageByPos(x,y,VIDE)
+            HexGrid.setTileImageByPos(x,y,PION);
         }
     }
 
