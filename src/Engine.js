@@ -56,10 +56,12 @@ class Engine {
     }
 
     move(x,y, color){
+
+        console.log(this.nbturn)
         if (this.nbturn == 0){
             this.turn(x,y,color);
             this.changePlayer();
-            return false;
+            return true;
         }
         if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y,color)) {
             if (this.movePlayer > 0) {
@@ -80,7 +82,9 @@ class Engine {
     turn(x,y, color) {
         this.pion.setX(x);
         this.pion.setY(y);
+        console.log(color);
         this.pion.setColor(color.id);
+        console.log(this.tokenPlayer)
         this.player[this.tokenPlayer].setTokenStack(color.id)
         this.nbturn++;
     }
@@ -143,17 +147,20 @@ class Engine {
     }
 
     init(namePlayer1, namePlayer2){
-        this.player = new Joueur()[2];
-        this.player[0] = new Joueur(namePlayer1);
-        this.player[1] = new Joueur(namePlayer2);
-        this.tokenPlayer = Math.random() >= 0.5;
+        this.player = [];
+        this.player.push(new Joueur(namePlayer1));
+        this.player.push(new Joueur(namePlayer2));
+        this.pion = new Pion();
+        this.tokenPlayer = Math.floor(Math.random()*2);
+        console.log(this.tokenPlayer);
         this.nbturn = 0;
         this.movePlayer= 0;
+
     }
 
     changePlayer(){
         this.movePlayer = 0;
-        this.tokenPlayer = !this.tokenPlayer;
+        this.tokenPlayer = (this.tokenPlayer == 1) ? 0 : 1;
     }
 
     winner(){

@@ -190,6 +190,8 @@ function App(options) {
 		tileSize: this.tileSize
 	});
 
+
+
 	initColors();
 
 	var iter = this.hexGrid.getTileIterator();
@@ -210,12 +212,19 @@ function App(options) {
 		tile = iter.next();
 	}
 
+    this.engine = new Engine();
+	this.engine.init("Théo","Grishka")
+
+	console.log(this.engine);
+
 	this.attachMouseEvents();
 }
 
 App.prototype.getTileColorByPos = function(x, y) {
 	// Results in a dark border.
-	return this.getTileByCoords(x,y).color;
+
+
+    return this.hexGrid.getTileByCoords(x,y).color;
 };
 
 
@@ -230,13 +239,17 @@ App.prototype.attachMouseEvents = function() {
 			tile.element.myParam1 = tile;
 			tile.element.myParam1.posX = tilePos.x;
 			tile.element.myParam1.posY = tilePos.y;
+			tile.element.myEngine = this.engine;
+            tile.element.myApp = this;
 		}
 		tile = iter.next();
 	}
 };
 
 var onTileClick = function(evt) {
-    console.log(evt.target.myParam1);
+    console.log(evt.target.myApp.getTileColorByPos(evt.target.myParam1.posX,evt.target.myParam1.posY));
+
+    evt.target.myEngine.move(evt.target.myParam1.posX,evt.target.myParam1.posY,evt.target.myApp.getTileColorByPos(evt.target.myParam1.posX,evt.target.myParam1.posY) )
 };
 
 App.prototype.animateLeftToRight = function() {
