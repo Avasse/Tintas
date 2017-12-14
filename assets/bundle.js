@@ -226,7 +226,6 @@ App.prototype.attachMouseEvents = function() {
 	var iter = this.hexGrid.getTileIterator();
 	var tile = iter.next();
 	while (tile !== null) {
-	    debugger;
 		tilePos = this.hexGrid.getPositionById(tile.id);
 		pos = tilePos.x + '.' + tilePos.y;
 		if (!invalidPos.includes(pos)) {
