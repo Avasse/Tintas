@@ -984,13 +984,10 @@ class Engine {
     }
 
     move(x,y, color){
-        console.log(this.nbturn);
         if (this.nbturn == 0){
             this.turn(x,y,color);
-            //this.changePlayer();
             return true;
         }
-        debugger;
         if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y,color)) {
             if (this.movePlayer > 0) {
                 if (!this.verifColor(color, this.pion.getColor())) {
@@ -1000,10 +997,6 @@ class Engine {
             this.turn(x, y, color);
             this.movePlayer++;
             return true;
-           /* if(this.winner()){
-                return true;
-            }*/
-            //this.changePlayer();
         }
         return false;
     }
