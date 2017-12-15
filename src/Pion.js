@@ -20,3 +20,5 @@ class Pion {
         return this.color;
     }
 }
+
+module.exports = Pion;

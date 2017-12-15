@@ -155,6 +155,8 @@ class Engine {
     }
 
     init(namePlayer1, namePlayer2){
+        var Joueur = require('../src/Joueur');
+        var Pion = require('../src/Pion');
         this.player = [];
         this.player.push(new Joueur(namePlayer1));
         this.player.push(new Joueur(namePlayer2));
@@ -184,3 +186,5 @@ class Engine {
         return this.nbturn;
     }
 }
+
+module.exports = Engine;
