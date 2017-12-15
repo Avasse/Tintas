@@ -106,6 +106,9 @@ class Engine {
         let signDiffY = this.signDiffY(x,y);
         while(x != positionX && y != positionY){
             if (color.id !== pieces[this.pion.getColor()].id){
+                if (Math.abs(Math.floor(x) - this.pion.getX()) > 1 || Math.abs(Math.floor(y) - this.pion.getY()) >0.5){
+                    color.id !== pieces[0].id
+                }
                 return false;
             }
             positionX += signDiffX;
