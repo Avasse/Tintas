@@ -270,6 +270,7 @@ var onTileClick = function(evt) {
 	var myEngine = evt.target.myEngine
 	var myApp = evt.target.myApp
 
+
 	console.log(myApp.hexGrid.getTileByCoords(x,y));
 
 	var nbturn = myEngine.getNbTurn();

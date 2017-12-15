@@ -61,7 +61,7 @@ class Engine {
             this.movePlayer++;
             return true;
         }
-        var verifMove = this.verifPosition(x,y) && this.verifNoPieceBefore(x,y,color);// && this.verifNotEmpty(color);
+        var verifMove = this.verifPosition(x,y) && this.verifNoPieceBefore(x,y,color) && this.verifNotEmpty(color);
         if(this.nbturn > 0 && verifMove) {
             if (this.movePlayer > 0) {
                 if (!this.verifColor(color,this.pion.getColor())){
@@ -107,6 +107,9 @@ class Engine {
         let signDiffY = this.signDiffY(x,y);
         while(x != positionX && y != positionY){
             if (color.id !== pieces[this.pion.getColor()].id){
+                if (Math.abs(Math.floor(x) - this.pion.getX()) > 1 || Math.abs(Math.floor(y) - this.pion.getY()) >0.5){
+                    color.id !== pieces[0].id
+                }
                 return false;
             }
             positionX += signDiffX;
@@ -114,6 +117,11 @@ class Engine {
         }
         return true;
     };
+
+    verifNotEmpty(color)
+    {
+        return color.id != 0;
+    }
 
     getPionX(){
         return this.pion.getX();
