@@ -60,7 +60,7 @@ class Engine {
             this.turn(x,y,color);
             return true;
         }
-        if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y,color)) {
+        if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y,color) && this.verifNotEmpty(color)) {
             if (this.movePlayer > 0) {
                 if (!this.verifColor(color, this.pion.getColor())) {
                     return false;
@@ -78,7 +78,7 @@ class Engine {
         this.pion.setY(y);
         console.log(color);
         this.pion.setColor(color.id);
-        this.player[this.tokenPlayer].setTokenStack(color.id);
+        this.players[this.tokenPlayer].setTokenStack(color.id);
     }
 
     verifPosition(x,y){
@@ -113,6 +113,11 @@ class Engine {
         }
         return true;
     };
+
+    verifNotEmpty(color)
+    {
+        return color.id != 0;
+    }
 
     getPionX(){
         return this.pion.getX();

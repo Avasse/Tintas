@@ -270,6 +270,7 @@ var onTileClick = function(evt) {
 	var myEngine = evt.target.myEngine
 	var myApp = evt.target.myApp
 
+
 	console.log(myApp.hexGrid.getTileByCoords(x,y));
 
 	var nbturn = myEngine.getNbTurn();
@@ -278,9 +279,11 @@ var onTileClick = function(evt) {
 
     if (myEngine.move(x,y,myApp.getTileColorByPos(x,y))){
     	console.log("tour");
+        evt.target.myParam1.color = empty;
         myApp.dtd.setTileImage(myApp.hexGrid.getTileByCoords(x,y).element, pion.src );
 		
         if (nbturn > 0){
+
             myApp.dtd.setTileImage(myApp.hexGrid.getTileByCoords(pionX,pionY).element, empty.src );
 		}
 	}
