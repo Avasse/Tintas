@@ -164,6 +164,16 @@ _:-ms-input-placeholder, :root .demo-graph {
   height: 100%;
 }
 
+#view {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+
  #button-end {
   position: absolute;
   right: 0;
