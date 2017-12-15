@@ -258,8 +258,7 @@ App.prototype.attachMouseEvents = function() {
 
 var onTileClick = function(evt) {
 
-	console.log(evt.element.myParam1)
-	var tile = evt.element.myParam1
+	var tile = evt.target.element.myParam1
 	var x = evt.target.myParam1.posX
 	var y = evt.target.myParam1.posY
 	var myEngine = evt.target.myEngine
