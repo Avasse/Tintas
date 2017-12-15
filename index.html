@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<link rel="icon" type="image/png" href="./favicon.png">
+	<title>A small hex map</title>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+	<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.cyan-light_blue.min.css">
+	<link rel="stylesheet" href="assets/styles/styles.css">
+	<script src="./assets/bundle.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" charset="utf-8">
+		window.onload = function () {
+			var grid = document.getElementById('grid');
+
+			// Create a new grid.
+			var App = require('/src/App.js');
+			var app = new App({
+				container: grid,
+				tileSize: 45,
+				width: 9,
+				height: 8
+			});
+		};
+	</script>
+	<meta charset="utf-8" />
+</head>
+
+<body>
+	<div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+		<header class="demo-header mdl-layout__header mdl-color--grey-100 mdl-color-text--grey-600">
+			<div class="mdl-layout__header-row">
+				<span class="mdl-layout-title">Jeux</span>
+				<div class="mdl-layout-spacer"></div>
+				<div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable">
+					<label class="mdl-button mdl-js-button mdl-button--icon" for="search">
+						<i class="material-icons">search</i>
+					</label>
+					<div class="mdl-textfield__expandable-holder">
+						<input class="mdl-textfield__input" type="text" id="search">
+						<label class="mdl-textfield__label" for="search">Entrez votre recherche...</label>
+					</div>
+				</div>
+				<button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="hdrbtn">
+					<i class="material-icons">more_vert</i>
+				</button>
+				<ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
+					<li class="mdl-menu__item">A propos</li>
+					<li class="mdl-menu__item">Contact</li>
+					<li class="mdl-menu__item">Informations légales</li>
+				</ul>
+			</div>
+		</header>
+		<div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50">
+			<header class="demo-drawer-header">
+				<img src="img/user.jpg" class="demo-avatar">
+				<div class="demo-avatar-dropdown">
+					<span>avasse@test.com</span>
+					<div class="mdl-layout-spacer"></div>
+					<button id="accbtn" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+						<i class="material-icons" role="presentation">arrow_drop_down</i>
+						<span class="visuallyhidden">Comptes</span>
+					</button>
+					<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="accbtn">
+						<li class="mdl-menu__item">avasse@test.com</li>
+						<li class="mdl-menu__item">info@example.com</li>
+						<li class="mdl-menu__item">
+							<i class="material-icons">add</i>Ajouter un compte</li>
+					</ul>
+				</div>
+			</header>
+			<nav class="demo-navigation mdl-navigation mdl-color--blue-grey-800">
+				<a class="mdl-navigation__link" href="firstroute" data-navigo>
+					<i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Accueil</a>
+				<a class="mdl-navigation__link" href="secondroute" data-navigo>
+					<i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">insert_drive_file</i>Règles</a>
+				<a class="mdl-navigation__link" href="thirdroute" data-navigo>
+					<i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">play_circle_outline</i>Jouer</a>
+			</nav>
+		</div>
+		<main class="mdl-layout__content mdl-color--grey-100">
+			<div id="view"></div>
+		</main>
+	</div>
+	<script src="./assets/navigo.js"></script>
+	<script src="./src/Router.js"></script>
+	<script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+</body>
+
+</html>
