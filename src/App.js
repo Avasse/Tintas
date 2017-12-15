@@ -1,12 +1,88 @@
 var HexGrid = require('../assets/hex-grid');
 
+var invalidPos = ['0.0', '1.0.5', '2.0', '4.0', '5.0.5', '6.0', '7.0.5', '8.0', '0.1', '1.1.5', '8.1', '0.2', '8.2', '8.3', '0.5', '0.6', '7.6.5', '8.6', '0.7', '1.7.5', '3.7.5', '7.7.5', '8.7']
+
+var pieces = [
+    {
+        name : 'BLEU',
+        id: 1,
+		src: './img/blue.png',
+		nb: 7
+    },
+    {
+        name : 'JAUNE',
+        id: 2,
+        src: './img/yellow.png',
+        nb: 7
+    },
+    {
+        name : 'ROUGE',
+        id: 3,
+        src:'./img/red.png',
+        nb: 7
+	},
+	{
+        name : 'VERT',
+        id: 4,
+        src: './img/green.png',
+        nb: 7
+	},
+	{
+		name : 'VIOLET',
+		id: 5,
+		src: './img/purple.png',
+		nb: 7
+	},
+	{
+        name : 'ORANGE',
+		id: 6,
+		src: './img/orange.png',
+		nb: 7
+	},
+	{
+        name : 'BLANC',
+		id: 7,
+		src: './img/white.png',
+		nb: 7
+	}
+];
+
+var empty = {
+    name : 'EMPTY',
+    id: 0,
+    src: './img/empty.png',
+    nb: 0
+};
+
+var pion = {
+	name : 'PION',
+	src: './img/pion.png'
+};
+
+var colours = [];
+
+var initColors = function () {
+	pieces.forEach(function (piece) {
+		for (var i = 0; i< 7; i++){
+            colours.push(piece);
+		}
+	});
+
+    var j, x, i;
+    for (i = colours.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = colours[i];
+        colours[i] = colours[j];
+        colours[j] = x;
+    }
+};
+
 var TileFactory = function () {
 	var _id = 0;
 	return {
 		newTile: function () {
 			var tile = {
-				id: _id.toString(),
-				type: 'testTile'
+				id: _id.toString()
 			};
 
 			_id += 1;
@@ -54,11 +130,14 @@ DomTileDrawer.prototype.createDomTile = function(xPos, yPos) {
 	tileDiv.style.left = (xPos * hexWidth * 0.75) + 'px';
 	tileDiv.style.top = (yPos * tileHeight) + 'px';
 
-	tileDiv.style.backgroundSize = hexWidth + 'px ' + tileHeight  + 'px';
-
+	var tileImg = document.createElement('img');
+	tileImg.style.backgroundSize = hexWidth + 'px ' + tileHeight  + 'px';
+	tileImg.style.width = '100%';
+	tileImg.style.height = '100%';
 	this.parent.appendChild(tileDiv);
+	tileDiv.appendChild(tileImg)
 
-	return tileDiv;
+	return tileImg;
 };
 
 DomTileDrawer.prototype.setTileImage = function(element, imgFilename) {
@@ -66,6 +145,7 @@ DomTileDrawer.prototype.setTileImage = function(element, imgFilename) {
 		throw new Error('element is not an object');
 	}
 
+	element.src = imgFilename;
 	element.style.backgroundImage = 'url(' + imgFilename + ')';
 };
 
@@ -121,64 +201,88 @@ function App(options) {
 		tileSize: this.tileSize
 	});
 
+
+
+	initColors();
+
 	var iter = this.hexGrid.getTileIterator();
 	var tile = iter.next();
-	var tilePos;
+	var tilePos, pos, i = 0;
 	while (tile !== null) {
 		tilePos = this.hexGrid.getPositionById(tile.id);
-		tile.element = this.dtd.createDomTile(tilePos.x, tilePos.y);
-		this.dtd.setTileImage(
-			tile.element,
-			this.getTileImageByPos(tilePos.x, tilePos.y)
-		);
+		pos = tilePos.x + '.' + tilePos.y;
+		if (!invalidPos.includes(pos)){
+			tile.element = this.dtd.createDomTile(tilePos.x, tilePos.y);
+            tile.color = colours[i];
+			this.dtd.setTileImage(
+				tile.element,
+				tile.color.src
+			);
+			i++;
+		}
 		tile = iter.next();
 	}
 
-	//this.attachMouseEvents();
-	//this.animateLeftToRight();
+	var Engine = require('../src/Engine')
+    this.engine = new Engine();
+	this.engine.init("Théo","Grishka");
+
+	this.attachMouseEvents();
 }
 
-App.prototype.getTileImageByPos = function(x, y) {
+App.prototype.getTileColorByPos = function(x, y) {
 	// Results in a dark border.
-	if (x === 0 || x === this.width - 1 ||
-		y === 0 ||
-		(y === this.height - 1 && x % 2 === 0) ||
-		(y === this.height - 0.5 && x % 2 === 1)
-	) {
-		return './img/dark-circle.png';
-	}
-
-	return './img/light-circle.png';
+	console.log(x);
+	console.log(y);
+    return this.hexGrid.getTileByCoords(x,y).color;
 };
+
 
 App.prototype.attachMouseEvents = function() {
 	var iter = this.hexGrid.getTileIterator();
 	var tile = iter.next();
 	while (tile !== null) {
-		tile.element.onmouseover = function(tile) {
-			return function () {
-				if (tile.selected !== true) {
-					this.dtd.setTileImage(tile.element, './img/dark-circle.png');
-				}
-			}.bind(this);
-		}.bind(this)(tile);
-
-		tile.element.onmouseout = function(tile) {
-			return function () {
-				if (tile.selected !== true) {
-					this.dtd.setTileImage(tile.element, './img/light-circle.png');
-				}
-			}.bind(this);
-		}.bind(this)(tile);
-
-		tile.element.onmousedown = function(tile) {
-			return function () {
-				tile.selected = true;
-				this.dtd.setTileImage(tile.element, './img/red-circle.png');
-			}.bind(this);
-		}.bind(this)(tile);
-
+		tilePos = this.hexGrid.getPositionById(tile.id);
+		pos = tilePos.x + '.' + tilePos.y;
+		if (!invalidPos.includes(pos)) {
+			tile.element.addEventListener("click", onTileClick, false);
+			tile.element.myParam1 = tile;
+			tile.element.myParam1.posX = tilePos.x;
+			tile.element.myParam1.posY = tilePos.y;
+			tile.element.myEngine = this.engine;
+			tile.element.myApp = this;
+		}
 		tile = iter.next();
+	}
+	var buttonEndTurn = document.getElementById("button-end");
+	buttonEndTurn.Engine = this.engine;
+	buttonEndTurn.addEventListener("click", onButtonEndClick);
+}; 
+
+var onButtonEndClick = function(evt) {
+	var engine = evt.target.offsetParent.Engine;
+	engine.changePlayer();	
+}
+
+var onTileClick = function(evt) {
+	var x = evt.target.myParam1.posX
+	var y = evt.target.myParam1.posY
+	var myEngine = evt.target.myEngine
+	var myApp = evt.target.myApp
+
+
+	console.log(myApp.hexGrid.getTileByCoords(x,y));
+
+	var nbturn = myEngine.getNbTurn();
+	var pionX = myEngine.getPionX();
+	var pionY = myEngine.getPionY();
+
+    if (myEngine.move(x,y,myApp.getTileColorByPos(x,y))){
+		evt.target.myParam1.color = empty;
+        myApp.dtd.setTileImage(myApp.hexGrid.getTileByCoords(x,y).element, pion.src);
+        if (nbturn > 0){
+            myApp.dtd.setTileImage(myApp.hexGrid.getTileByCoords(pionX,pionY).element, empty.src);
+		}
 	}
 };
 
@@ -187,14 +291,17 @@ App.prototype.animateLeftToRight = function() {
 	var tile = iter.next();
 	var animationInterval;
 
+	tilePos = this.hexGrid.getPositionById(tile.id);
+	pos = tilePos.x + '.' + tilePos.y;
+
 	var animate = function() {
-		if (tile === null) {
+		if (tile === null || !invalidPos.includes(pos)) {
 			window.clearInterval(animationInterval);
 			this.animationComplete();
 			return;
 		}
 
-		this.dtd.setTileImage(tile.element, './img/dark-circle.png');
+		//this.dtd.setTileImage(tile.element, './img/dark-circle.png');
 		tile = iter.next();
 	}.bind(this);
 

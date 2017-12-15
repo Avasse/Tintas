@@ -26,3 +26,5 @@ class Joueur{
         return this.tokenStack[id];
     }
 }
+
+module.exports = Joueur;

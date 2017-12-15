@@ -173,6 +173,18 @@ _:-ms-input-placeholder, :root .demo-graph {
   justify-content: center;
   align-items: center;
   align-content: center;
+
+ #button-end {
+  position: absolute;
+  right: 0;
+  top: 0;
+  margin-right: 1.5rem;
+  margin-top: 1rem;
+  background: rgb(223, 188, 148);
+}
+
+ #button-end:hover {
+  background: rgb(223, 188, 148);
 }
 
 .demo-cards {

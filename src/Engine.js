@@ -49,31 +49,37 @@ let pieces = [
     }
 ];
 
-let pion= { id : 0, src : './img/pion.png'}
+let pion= { id : 0, src : './img/pion.png'};
 
 class Engine {
     constructor(){
     }
 
-    move(x,y, color, colorpion){
-        if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y,color) && this.verifColor(x,y, color, colorpion) && (this.nbturn> 0)){
-            this.pion.setX(x);
-            this.pion.setY(y);
-
-            this.player[this.tokenPlayer].setTokenStack(color.id)
-            this.nbturn++;
+    move(x,y, color){
+        if (this.nbturn == 0 && this.movePlayer === 0){
+            this.turn(x,y,color);
+            this.movePlayer++;
+            return true;
+        }
+        var verifMove = this.verifPosition(x,y) && this.verifNotEmpty(color);
+        if(this.nbturn > 0 && verifMove) {
+            if (this.movePlayer > 0) {
+                if (!this.verifColor(color,this.pion.getColor())){
+                    return false;
+                }
+            }
+            this.turn(x, y, color);
+            this.movePlayer++;
             return true;
         }
         return false;
     }
 
     turn(x,y, color) {
-
         this.pion.setX(x);
         this.pion.setY(y);
-        this.nbturn++;
-        this.player[this.tokenPlayer].setTokenStack(color.id)
-
+        this.pion.setColor(color.id);
+        this.players[this.tokenPlayer].setTokenStack(color.id);
     }
 
     verifPosition(x,y){
@@ -91,7 +97,7 @@ class Engine {
     }
 
     verifDiagonal(x,y) {
-        return (Math.abs(x - this.pion.getX()) == Math.abs(y - this.pion.getY()))
+        return (Math.abs(x - this.pion.getX()) == Math.abs(y - this.pion.getY())*2)
     }
 
     verifNoPieceBefore(x,y, color){
@@ -100,7 +106,10 @@ class Engine {
         let signDiffX = this.signDiffX(x,y);
         let signDiffY = this.signDiffY(x,y);
         while(x != positionX && y != positionY){
-            if (color.id !== pieces[0].id){
+            if (color.id !== pieces[this.pion.getColor()].id){
+                if (Math.abs(Math.floor(x) - this.pion.getX()) > 1 || Math.abs(Math.floor(y) - this.pion.getY()) >0.5){
+                    color.id !== pieces[0].id
+                }
                 return false;
             }
             positionX += signDiffX;
@@ -108,6 +117,19 @@ class Engine {
         }
         return true;
     };
+
+    verifNotEmpty(color)
+    {
+        return color.id != 0;
+    }
+
+    getPionX(){
+        return this.pion.getX();
+    }
+
+    getPionY(){
+        return this.pion.getY();
+    }
 
     signDiffX(x){
         if ((this.pion.getX() - x) > 0){
@@ -121,29 +143,56 @@ class Engine {
 
     signDiffY(y){
         if ((this.pion.getY() - y) > 0){
-        return -1;
+        return -0.5;
         }
         if((this.pion.getY() - y) == 0){
             return 0;
         }
-        return 1;
+        return 0.5;
     }
 
-    getNbTurn
-
-
-    verifColor(x,y, color, colorpion){
-        return (colorpion != color.id);
+    verifColor(color, colorpion){
+        return (colorpion == color.id);
     }
 
     init(namePlayer1, namePlayer2){
-        this.player = new Joueur()[2];
-        this.player[0] = new Joueur(namePlayer1);
-        this.player[1] = new Joueur(namePlayer1);
-        this.tokenPlayer = Math.random() >= 0.5;
-
+        var Joueur = require('../src/Joueur');
+        var Pion = require('../src/Pion');
+        this.players = [];
+        this.players.push(new Joueur(namePlayer1));
+        this.players.push(new Joueur(namePlayer2));
+        this.pion = new Pion();
+        this.tokenPlayer = Math.floor(Math.random()*2);
         this.nbturn = 0;
+        this.movePlayer= 0;
+    }
 
-        //this.pion = new Pion(x,y); a initialiser au premier tour du joueur selectionner
+    changePlayer(){
+        this.movePlayer = 0;
+        this.tokenPlayer = (this.tokenPlayer == 1) ? 0 : 1;
+        this.nbturn++;
+    }
+
+    winner(){
+        for (let i = 1;i<8;i++){
+            if(this.player[this.tokenPlayer].getTokenStack(i) == 7){
+                return true
+            }
+        }
+        return false;
+    }
+
+    getNbTurn(){
+        return this.nbturn;
+    }
+
+    getPlayer() {
+        return this.tokenPlayer;
+    }
+
+    getMovePlayer() {
+        return this.movePlayer;
     }
 }
+
+module.exports = Engine;
