@@ -20,7 +20,9 @@ router.on({
     // 'view' is the id of the div element inside which we render the HTML
     'firstroute': () => { loadHTML('/src/templates/home.html', 'view') },
     'secondroute': () => { loadHTML('/src/templates/rules.html', 'view') },
-    'thirdroute': () => { loadHTML('/src/templates/grid.html', 'view') }
+    'thirdroute': () => { 
+        loadHTML('/src/templates/grid.html', 'view');
+    }
 });
 
 // set the default route

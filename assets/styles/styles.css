@@ -173,6 +173,7 @@ _:-ms-input-placeholder, :root .demo-graph {
   justify-content: center;
   align-items: center;
   align-content: center;
+}
 
  #button-end {
   position: absolute;
@@ -256,4 +257,58 @@ _:-ms-input-placeholder, :root .demo-graph {
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
+}
+
+/* ---------------------------- */
+/* PAGE REGLE                   */
+/* ---------------------------- */
+.page_regles {
+  position: absolute;
+  top: 0px;
+  padding: 0 20px;
+}
+.page_regles p {
+  padding: 1%;
+}
+.page_regles h2 {
+  text-align: center;
+}
+.page_regles h3 {
+}
+.page_regles article {
+  display: flex;
+  justify-content: space-around;
+}
+.page_regles .txt {
+  width: 70%;
+}
+.page_regles .illustration {
+  width: 20%;
+}
+.page_regles .illustration img {
+  max-width: 100%;
+}
+/* ---------------------------- */
+/* PAGE HOME                    */
+/* ---------------------------- */
+.page_home {
+  position: absolute;
+  top: 0px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+.image_accueil {
+  width: 100%;
+  height: 460px;
+  overflow: hidden;
+  position: relative;
+}
+.image_accueil img {
+  width: 100%;
+  position: absolute;
+}
+.texte_accueil {
+  padding: 3%;
 }
