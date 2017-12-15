@@ -122,6 +122,14 @@ class Engine {
         return true;
     };
 
+    getPionX(){
+        return this.pion.getX();
+    }
+
+    getPionY(){
+        return this.pion.getY();
+    }
+
     signDiffX(x){
         if ((this.pion.getX() - x) > 0){
             return -1;

@@ -258,10 +258,24 @@ App.prototype.attachMouseEvents = function() {
 
 var onTileClick = function(evt) {
 
-	console.log(evt.target.myApp.hexGrid.getTileByCoords(evt.target.myParam1.posX,evt.target.myParam1.posY));
-    if (evt.target.myEngine.move(evt.target.myParam1.posX,evt.target.myParam1.posY,evt.target.myApp.getTileColorByPos(evt.target.myParam1.posX,evt.target.myParam1.posY))){
+	var x = evt.target.myParam1.posX
+	var y = evt.target.myParam1.posY
+	var myEngine = evt.target.myEngine
+	var myApp = evt.target.myApp
+
+	console.log(myApp.hexGrid.getTileByCoords(x,y));
+
+	var nbturn = myEngine.getNbTurn();
+	var pionX = myEngine.getPionX();
+	var pionY = myEngine.getPionY();
+
+    if (myEngine.move(x,y,myApp.getTileColorByPos(x,y))){
     	console.log("tour");
-        evt.target.myApp.dtd.setTileImage(evt.target.myApp.hexGrid.getTileByCoords(evt.target.myParam1.posX,evt.target.myParam1.posY).element, pion.src );
+        myApp.dtd.setTileImage(myApp.hexGrid.getTileByCoords(x,y).element, pion.src );
+
+        if (nbturn > 0){
+            myApp.dtd.setTileImage(myApp.hexGrid.getTileByCoords(pionX,pionY).element, empty.src );
+		}
 	}
 };
 
