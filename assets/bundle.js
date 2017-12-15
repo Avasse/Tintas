@@ -225,15 +225,15 @@ function App(options) {
 	}
 
     this.engine = new Engine();
-	this.engine.init("Théo","Grishka")
+	this.engine.init("Théo","Grishka");
 
 	this.attachMouseEvents();
 }
 
 App.prototype.getTileColorByPos = function(x, y) {
 	// Results in a dark border.
-	console.log(x)
-	console.log(y)
+	console.log(x);
+	console.log(y);
     return this.hexGrid.getTileByCoords(x,y).color;
 };
 
@@ -260,7 +260,7 @@ var onTileClick = function(evt) {
 
 	console.log(evt.target.myApp.hexGrid.getTileByCoords(evt.target.myParam1.posX,evt.target.myParam1.posY));
     if (evt.target.myEngine.move(evt.target.myParam1.posX,evt.target.myParam1.posY,evt.target.myApp.getTileColorByPos(evt.target.myParam1.posX,evt.target.myParam1.posY))){
-    	console.log("tour")
+    	console.log("tour");
         evt.target.myApp.dtd.setTileImage(evt.target.myApp.hexGrid.getTileByCoords(evt.target.myParam1.posX,evt.target.myParam1.posY).element, pion.src )
 
 	}
