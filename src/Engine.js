@@ -61,7 +61,7 @@ class Engine {
             this.movePlayer++;
             return true;
         }
-        var verifMove = this.verifPosition(x,y) && this.verifNoPieceBefore(x,y,color) && this.verifNotEmpty(color);
+        var verifMove = this.verifPosition(x,y) && this.verifNotEmpty(color);
         if(this.nbturn > 0 && verifMove) {
             if (this.movePlayer > 0) {
                 if (!this.verifColor(color,this.pion.getColor())){

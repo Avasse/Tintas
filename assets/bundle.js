@@ -895,13 +895,10 @@ var onTileClick = function(evt) {
 	var pionY = myEngine.getPionY();
 
     if (myEngine.move(x,y,myApp.getTileColorByPos(x,y))){
-    	console.log("tour");
-        evt.target.myParam1.color = empty;
-        myApp.dtd.setTileImage(myApp.hexGrid.getTileByCoords(x,y).element, pion.src );
-		
+		evt.target.myParam1.color = empty;
+        myApp.dtd.setTileImage(myApp.hexGrid.getTileByCoords(x,y).element, pion.src);
         if (nbturn > 0){
-
-            myApp.dtd.setTileImage(myApp.hexGrid.getTileByCoords(pionX,pionY).element, empty.src );
+            myApp.dtd.setTileImage(myApp.hexGrid.getTileByCoords(pionX,pionY).element, empty.src);
 		}
 	}
 };
@@ -994,13 +991,15 @@ class Engine {
     }
 
     move(x,y, color){
-        if (this.nbturn == 0){
+        if (this.nbturn == 0 && this.movePlayer === 0){
             this.turn(x,y,color);
+            this.movePlayer++;
             return true;
         }
-        if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y,color) && this.verifNotEmpty(color)) {
+        var verifMove = this.verifPosition(x,y) && this.verifNotEmpty(color);
+        if(this.nbturn > 0 && verifMove) {
             if (this.movePlayer > 0) {
-                if (!this.verifColor(color, this.pion.getColor())) {
+                if (!this.verifColor(color,this.pion.getColor())){
                     return false;
                 }
             }
@@ -1014,7 +1013,6 @@ class Engine {
     turn(x,y, color) {
         this.pion.setX(x);
         this.pion.setY(y);
-        console.log(color);
         this.pion.setColor(color.id);
         this.players[this.tokenPlayer].setTokenStack(color.id);
     }
@@ -1100,10 +1098,8 @@ class Engine {
         this.players.push(new Joueur(namePlayer2));
         this.pion = new Pion();
         this.tokenPlayer = Math.floor(Math.random()*2);
-        console.log(this.tokenPlayer);
         this.nbturn = 0;
         this.movePlayer= 0;
-
     }
 
     changePlayer(){
@@ -1127,6 +1123,10 @@ class Engine {
 
     getPlayer() {
         return this.tokenPlayer;
+    }
+
+    getMovePlayer() {
+        return this.movePlayer;
     }
 }
 

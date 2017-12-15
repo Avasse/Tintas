@@ -278,6 +278,7 @@ var onTileClick = function(evt) {
 	var pionY = myEngine.getPionY();
 
     if (myEngine.move(x,y,myApp.getTileColorByPos(x,y))){
+		evt.target.myParam1.color = empty;
         myApp.dtd.setTileImage(myApp.hexGrid.getTileByCoords(x,y).element, pion.src);
         if (nbturn > 0){
             myApp.dtd.setTileImage(myApp.hexGrid.getTileByCoords(pionX,pionY).element, empty.src);
