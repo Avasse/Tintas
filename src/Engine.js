@@ -103,7 +103,6 @@ class Engine {
     }
 
     verifDiagonal(x,y) {
-        debugger;
         return (Math.abs(x - this.pion.getX()) == Math.abs(y - this.pion.getY())*2)
     }
 

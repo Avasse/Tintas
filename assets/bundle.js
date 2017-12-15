@@ -415,7 +415,6 @@ class Engine {
     }
 
     verifDiagonal(x,y) {
-        debugger;
         return (Math.abs(x - this.pion.getX()) == Math.abs(y - this.pion.getY())*2)
     }
 
@@ -731,8 +730,8 @@ module.exports = (function () {
 			throw new Error('x and y must be integers');
 		}
 
-		if (this.isWithinBoundaries(x, y)) {
-			return this.tiles[(y * this.width) + x];
+		if (this.isWithinBoundaries(x, Math.floor(y))) {
+			return this.tiles[(Math.floor(y) * this.width) + x];
 		}
 
 		return null;

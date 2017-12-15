@@ -258,6 +258,8 @@ App.prototype.attachMouseEvents = function() {
 
 var onTileClick = function(evt) {
 
+	console.log(evt.element.myParam1)
+	var tile = evt.element.myParam1
 	var x = evt.target.myParam1.posX
 	var y = evt.target.myParam1.posY
 	var myEngine = evt.target.myEngine
@@ -272,7 +274,7 @@ var onTileClick = function(evt) {
     if (myEngine.move(x,y,myApp.getTileColorByPos(x,y))){
     	console.log("tour");
         myApp.dtd.setTileImage(myApp.hexGrid.getTileByCoords(x,y).element, pion.src );
-
+		
         if (nbturn > 0){
             myApp.dtd.setTileImage(myApp.hexGrid.getTileByCoords(pionX,pionY).element, empty.src );
 		}
