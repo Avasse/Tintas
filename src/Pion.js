@@ -1,7 +1,5 @@
 class Pion {
-    constructor(x,y){
-        this.x = x;
-        this.y = y;
+    constructor(){
     }
     getX(){
         return this.x;

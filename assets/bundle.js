@@ -48,6 +48,18 @@ var pieces = [
 	}
 ];
 
+var empty = {
+    name : 'EMPTY',
+    id: 0,
+    src: './img/empty.png',
+    nb: 0
+};
+
+var pion = {
+	name : 'PION',
+	src: './img/pion.png'
+};
+
 var colours = [];
 
 var initColors = function () {
@@ -190,6 +202,8 @@ function App(options) {
 		tileSize: this.tileSize
 	});
 
+
+
 	initColors();
 
 	var iter = this.hexGrid.getTileIterator();
@@ -210,12 +224,17 @@ function App(options) {
 		tile = iter.next();
 	}
 
+    this.engine = new Engine();
+	this.engine.init("Théo","Grishka");
+
 	this.attachMouseEvents();
 }
 
 App.prototype.getTileColorByPos = function(x, y) {
 	// Results in a dark border.
-	return this.getTileByCoords(x,y).color;
+	console.log(x);
+	console.log(y);
+    return this.hexGrid.getTileByCoords(x,y).color;
 };
 
 
@@ -230,13 +249,34 @@ App.prototype.attachMouseEvents = function() {
 			tile.element.myParam1 = tile;
 			tile.element.myParam1.posX = tilePos.x;
 			tile.element.myParam1.posY = tilePos.y;
+			tile.element.myEngine = this.engine;
+            tile.element.myApp = this;
 		}
 		tile = iter.next();
 	}
 };
 
 var onTileClick = function(evt) {
-    console.log(evt.target.myParam1);
+
+	var x = evt.target.myParam1.posX
+	var y = evt.target.myParam1.posY
+	var myEngine = evt.target.myEngine
+	var myApp = evt.target.myApp
+
+	console.log(myApp.hexGrid.getTileByCoords(x,y));
+
+	var nbturn = myEngine.getNbTurn();
+	var pionX = myEngine.getPionX();
+	var pionY = myEngine.getPionY();
+
+    if (myEngine.move(x,y,myApp.getTileColorByPos(x,y))){
+    	console.log("tour");
+        myApp.dtd.setTileImage(myApp.hexGrid.getTileByCoords(x,y).element, pion.src );
+
+        if (nbturn > 0){
+            myApp.dtd.setTileImage(myApp.hexGrid.getTileByCoords(pionX,pionY).element, empty.src );
+		}
+	}
 };
 
 App.prototype.animateLeftToRight = function() {
@@ -444,8 +484,9 @@ module.exports = (function () {
 			throw new Error('x and y must be integers');
 		}
 
-		if (this.isWithinBoundaries(x, y)) {
-			return this.tiles[(y * this.width) + x];
+        console.log("boundaries")
+		if (this.isWithinBoundaries(x, Math.floor(y))) {
+			return this.tiles[(Math.floor(y) * this.width) + x];
 		}
 
 		return null;

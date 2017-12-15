@@ -49,17 +49,18 @@ let pieces = [
     }
 ];
 
-let pion= { id : 0, src : './img/pion.png'}
+let pion= { id : 0, src : './img/pion.png'};
 
 class Engine {
     constructor(){
     }
 
     move(x,y, color){
+        console.log(this.nbturn);
         if (this.nbturn == 0){
             this.turn(x,y,color);
-            this.changePlayer();
-            return false;
+            //this.changePlayer();
+            return true;
         }
         if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y,color)) {
             if (this.movePlayer > 0) {
@@ -69,10 +70,11 @@ class Engine {
             }
             this.turn(x, y, color);
             this.movePlayer++;
-            if(this.winner()){
+            return true;
+           /* if(this.winner()){
                 return true;
-            }
-            this.changePlayer();
+            }*/
+            //this.changePlayer();
         }
         return false;
     }
@@ -80,8 +82,9 @@ class Engine {
     turn(x,y, color) {
         this.pion.setX(x);
         this.pion.setY(y);
+        console.log(color);
         this.pion.setColor(color.id);
-        this.player[this.tokenPlayer].setTokenStack(color.id)
+        this.player[this.tokenPlayer].setTokenStack(color.id);
         this.nbturn++;
     }
 
@@ -100,7 +103,8 @@ class Engine {
     }
 
     verifDiagonal(x,y) {
-        return (Math.abs(x - this.pion.getX()) == Math.abs(y - this.pion.getY()))
+        debugger;
+        return (Math.abs(x - this.pion.getX()) == Math.abs(y - this.pion.getY())*2)
     }
 
     verifNoPieceBefore(x,y, color){
@@ -109,7 +113,7 @@ class Engine {
         let signDiffX = this.signDiffX(x,y);
         let signDiffY = this.signDiffY(x,y);
         while(x != positionX && y != positionY){
-            if (color.id !== pieces[0].id){
+            if (color.id !== pieces[this.pion.getColor()].id){
                 return false;
             }
             positionX += signDiffX;
@@ -117,6 +121,14 @@ class Engine {
         }
         return true;
     };
+
+    getPionX(){
+        return this.pion.getX();
+    }
+
+    getPionY(){
+        return this.pion.getY();
+    }
 
     signDiffX(x){
         if ((this.pion.getX() - x) > 0){
@@ -130,12 +142,12 @@ class Engine {
 
     signDiffY(y){
         if ((this.pion.getY() - y) > 0){
-        return -1;
+        return -0.5;
         }
         if((this.pion.getY() - y) == 0){
             return 0;
         }
-        return 1;
+        return 0.5;
     }
 
     verifColor(x,y, color, colorpion){
@@ -143,17 +155,20 @@ class Engine {
     }
 
     init(namePlayer1, namePlayer2){
-        this.player = new Joueur()[2];
-        this.player[0] = new Joueur(namePlayer1);
-        this.player[1] = new Joueur(namePlayer2);
-        this.tokenPlayer = Math.random() >= 0.5;
+        this.player = [];
+        this.player.push(new Joueur(namePlayer1));
+        this.player.push(new Joueur(namePlayer2));
+        this.pion = new Pion();
+        this.tokenPlayer = Math.floor(Math.random()*2);
+        console.log(this.tokenPlayer);
         this.nbturn = 0;
         this.movePlayer= 0;
+
     }
 
     changePlayer(){
         this.movePlayer = 0;
-        this.tokenPlayer = !this.tokenPlayer;
+        this.tokenPlayer = (this.tokenPlayer == 1) ? 0 : 1;
     }
 
     winner(){
