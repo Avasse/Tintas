@@ -1,563 +1,4 @@
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"/src/App.js":[function(require,module,exports){
-var HexGrid = require('../assets/hex-grid');
-
-var invalidPos = ['0.0', '1.0.5', '2.0', '4.0', '5.0.5', '6.0', '7.0.5', '8.0', '0.1', '1.1.5', '8.1', '0.2', '8.2', '8.3', '0.5', '0.6', '7.6.5', '8.6', '0.7', '1.7.5', '3.7.5', '7.7.5', '8.7']
-
-var pieces = [
-    {
-        name : 'BLEU',
-        id: 1,
-		src: './img/blue.png',
-		nb: 7
-    },
-    {
-        name : 'JAUNE',
-        id: 2,
-        src: './img/yellow.png',
-        nb: 7
-    },
-    {
-        name : 'ROUGE',
-        id: 3,
-        src:'./img/red.png',
-        nb: 7
-	},
-	{
-        name : 'VERT',
-        id: 4,
-        src: './img/green.png',
-        nb: 7
-	},
-	{
-		name : 'VIOLET',
-		id: 5,
-		src: './img/purple.png',
-		nb: 7
-	},
-	{
-        name : 'ORANGE',
-		id: 6,
-		src: './img/orange.png',
-		nb: 7
-	},
-	{
-        name : 'BLANC',
-		id: 7,
-		src: './img/white.png',
-		nb: 7
-	}
-];
-
-var empty = {
-    name : 'EMPTY',
-    id: 0,
-    src: './img/empty.png',
-    nb: 0
-};
-
-var pion = {
-	name : 'PION',
-	src: './img/pion.png'
-};
-
-var colours = [];
-
-var initColors = function () {
-	pieces.forEach(function (piece) {
-		for (var i = 0; i< 7; i++){
-            colours.push(piece);
-		}
-	});
-
-    var j, x, i;
-    for (i = colours.length - 1; i > 0; i--) {
-        j = Math.floor(Math.random() * (i + 1));
-        x = colours[i];
-        colours[i] = colours[j];
-        colours[j] = x;
-    }
-};
-
-var TileFactory = function () {
-	var _id = 0;
-	return {
-		newTile: function () {
-			var tile = {
-				id: _id.toString()
-			};
-
-			_id += 1;
-			return tile;
-		},
-	};
-};
-
-/**
- * Draws tiles by creating DOM elements.
- * @param array options
- * @param object options.parent Parent DOM element.
- */
-function DomTileDrawer(options) {
-	if (typeof options === 'undefined') {
-		throw new Error('must provide an options object');
-	}
-
-	if (typeof options.parent !== 'object' ||
-		options.parent.hasOwnProperty('childNodes' === false)
-	) {
-		throw new Error('options.container must be an HTML element');
-	}
-
-	if (typeof options.tileSize !== 'number') {
-		throw new Error('options.tileSize must be a number');
-	}
-
-
-	this.tileSize = options.tileSize;
-	this.parent = options.parent;
-}
-
-DomTileDrawer.prototype.createDomTile = function(xPos, yPos) {
-	var hexWidth = this.tileSize * 2;
-	// 0.866 = (Math.sqrt(3) / 2);
-	// 0.7510 = 362 / 482
-	var tileHeight = hexWidth * 0.7510;
-
-	var tileDiv = document.createElement('div');
-	tileDiv.style.position = 'absolute';
-	tileDiv.style.width = hexWidth + 'px';
-	tileDiv.style.height = tileHeight + 'px';
-
-	tileDiv.style.left = (xPos * hexWidth * 0.75) + 'px';
-	tileDiv.style.top = (yPos * tileHeight) + 'px';
-
-	var tileImg = document.createElement('img');
-	tileImg.style.backgroundSize = hexWidth + 'px ' + tileHeight  + 'px';
-	tileImg.style.width = '100%';
-	tileImg.style.height = '100%';
-	this.parent.appendChild(tileDiv);
-	tileDiv.appendChild(tileImg)
-
-	return tileImg;
-};
-
-DomTileDrawer.prototype.setTileImage = function(element, imgFilename) {
-	if (typeof element !== 'object') {
-		throw new Error('element is not an object');
-	}
-
-	element.src = imgFilename;
-	element.style.backgroundImage = 'url(' + imgFilename + ')';
-};
-
-var tileFactory = new TileFactory();
-
-/**
- * @param array options
- * @param object options.container DOM element for the grid.
- * @param object options.tileSize Tile height/width in pixels.
- * @param object options.width Grid width in tiles.
- * @param object options.height Grid height in tiles.
- * @param object options.onAnimationComplete Callback for when animation
- *        completes.
- */
-function App(options) {
-	if (typeof options === 'undefined') {
-		throw new Error('must provide an options object');
-	}
-
-	if (typeof options.container !== 'object') {
-		throw new Error('options.container must be an HTML element');
-	}
-
-	this.container = options.container;
-
-	if (typeof options.tileSize !== 'number') {
-		throw new Error('options.tileSize must be a number');
-	}
-
-	if (typeof options.width !== 'number') {
-		throw new Error('options.width must be a number');
-	}
-
-	if (typeof options.height !== 'number') {
-		throw new Error('options.height must be a number');
-	}
-
-	this.width = options.width;
-	this.height = options.height;
-	this.tileSize = options.tileSize;
-	this.onAnimationComplete = options.onAnimationComplete;
-
-	this.hexGrid = new HexGrid({
-		width: options.width,
-		height: options.height,
-		orientation: 'flat-topped',
-		layout: 'odd-q',
-		tileFactory: tileFactory
-	});
-
-	this.dtd = new DomTileDrawer({
-		parent: options.container,
-		tileSize: this.tileSize
-	});
-
-
-
-	initColors();
-
-	var iter = this.hexGrid.getTileIterator();
-	var tile = iter.next();
-	var tilePos, pos, i = 0;
-	while (tile !== null) {
-		tilePos = this.hexGrid.getPositionById(tile.id);
-		pos = tilePos.x + '.' + tilePos.y;
-		if (!invalidPos.includes(pos)){
-			tile.element = this.dtd.createDomTile(tilePos.x, tilePos.y);
-            tile.color = colours[i];
-			this.dtd.setTileImage(
-				tile.element,
-				tile.color.src
-			);
-			i++;
-		}
-		tile = iter.next();
-	}
-
-	var Engine = require('../src/Engine')
-    this.engine = new Engine();
-	this.engine.init("Théo","Grishka");
-
-	this.attachMouseEvents();
-}
-
-App.prototype.getTileColorByPos = function(x, y) {
-	// Results in a dark border.
-	console.log(x);
-	console.log(y);
-    return this.hexGrid.getTileByCoords(x,y).color;
-};
-
-
-App.prototype.attachMouseEvents = function() {
-	var iter = this.hexGrid.getTileIterator();
-	var tile = iter.next();
-	while (tile !== null) {
-		tilePos = this.hexGrid.getPositionById(tile.id);
-		pos = tilePos.x + '.' + tilePos.y;
-		if (!invalidPos.includes(pos)) {
-			tile.element.addEventListener("click", onTileClick, false);
-			tile.element.myParam1 = tile;
-			tile.element.myParam1.posX = tilePos.x;
-			tile.element.myParam1.posY = tilePos.y;
-			tile.element.myEngine = this.engine;
-            tile.element.myApp = this;
-		}
-		tile = iter.next();
-	}
-};
-
-var onTileClick = function(evt) {
-
-	console.log(evt.element.myParam1)
-	var tile = evt.element.myParam1
-	var x = evt.target.myParam1.posX
-	var y = evt.target.myParam1.posY
-	var myEngine = evt.target.myEngine
-	var myApp = evt.target.myApp
-
-	console.log(myApp.hexGrid.getTileByCoords(x,y));
-
-	var nbturn = myEngine.getNbTurn();
-	var pionX = myEngine.getPionX();
-	var pionY = myEngine.getPionY();
-
-    if (myEngine.move(x,y,myApp.getTileColorByPos(x,y))){
-    	console.log("tour");
-        myApp.dtd.setTileImage(myApp.hexGrid.getTileByCoords(x,y).element, pion.src );
-		
-        if (nbturn > 0){
-            myApp.dtd.setTileImage(myApp.hexGrid.getTileByCoords(pionX,pionY).element, empty.src );
-		}
-	}
-};
-
-App.prototype.animateLeftToRight = function() {
-	var iter = this.hexGrid.getTileIterator();
-	var tile = iter.next();
-	var animationInterval;
-
-	tilePos = this.hexGrid.getPositionById(tile.id);
-	pos = tilePos.x + '.' + tilePos.y;
-
-	var animate = function() {
-		if (tile === null || !invalidPos.includes(pos)) {
-			window.clearInterval(animationInterval);
-			this.animationComplete();
-			return;
-		}
-
-		//this.dtd.setTileImage(tile.element, './img/dark-circle.png');
-		tile = iter.next();
-	}.bind(this);
-
-	animationInterval = window.setInterval(animate, 50);
-};
-
-App.prototype.animationComplete = function() {
-	if (typeof this.onAnimationComplete === 'function') {
-		this.onAnimationComplete.call(null, this);
-	}
-};
-
-module.exports = App;
-},{"../assets/hex-grid":1,"../src/Engine":"/src/Engine.js"}],"/src/Engine.js":[function(require,module,exports){
-let pieces = [
-    {
-        name : 'VIDE',
-        id: 0,
-        src: './img/blue.png',
-        nb: 7
-    },
-    {
-        name : 'BLEU',
-        id: 1,
-        src: './img/blue.png',
-        nb: 7
-    },
-    {
-        name : 'JAUNE',
-        id: 2,
-        src: './img/yellow.png',
-        nb: 7
-    },
-    {
-        name : 'ROUGE',
-        id: 3,
-        src:'./img/red.png',
-        nb: 7
-    },
-    {
-        name : 'VERT',
-        id: 4,
-        src: './img/green.png',
-        nb: 7
-    },
-    {
-        name : 'VIOLET',
-        id: 5,
-        src: './img/purple.png',
-        nb: 7
-    },
-    {
-        name : 'ORANGE',
-        id: 6,
-        src: './img/orange.png',
-        nb: 7
-    },
-    {
-        name : 'BLANC',
-        id: 7,
-        src: './img/white.png',
-        nb: 7
-    }
-];
-
-let pion= { id : 0, src : './img/pion.png'};
-
-class Engine {
-    constructor(){
-    }
-
-    move(x,y, color){
-        console.log(this.nbturn);
-        if (this.nbturn == 0){
-            this.turn(x,y,color);
-            //this.changePlayer();
-            return true;
-        }
-        if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y,color)) {
-            if (this.movePlayer > 0) {
-                if (!this.verifColor(x, y, color, this.pion.getColor())) {
-                    return false;
-                }
-            }
-            this.turn(x, y, color);
-            this.movePlayer++;
-            return true;
-           /* if(this.winner()){
-                return true;
-            }*/
-            //this.changePlayer();
-        }
-        return false;
-    }
-
-    turn(x,y, color) {
-        this.pion.setX(x);
-        this.pion.setY(y);
-        console.log(color);
-        this.pion.setColor(color.id);
-        this.player[this.tokenPlayer].setTokenStack(color.id);
-        this.nbturn++;
-    }
-
-    verifPosition(x,y){
-        return (this.verifColonne(x,y)
-                || this.verifLigne(x,y)
-                || this.verifDiagonal(x,y));
-    }
-
-    verifLigne(x,y){
-        return (y == this.pion.getY() && x != this.pion.getX());
-    }
-
-    verifColonne(x,y){
-        return (y != this.pion.getY() && x == this.pion.getX());
-    }
-
-    verifDiagonal(x,y) {
-        return (Math.abs(x - this.pion.getX()) == Math.abs(y - this.pion.getY())*2)
-    }
-
-    verifNoPieceBefore(x,y, color){
-        let positionX = this.pion.getX();
-        let positionY = this.pion.getY();
-        let signDiffX = this.signDiffX(x,y);
-        let signDiffY = this.signDiffY(x,y);
-        while(x != positionX && y != positionY){
-            if (color.id !== pieces[this.pion.getColor()].id){
-                return false;
-            }
-            positionX += signDiffX;
-            positionY += signDiffY;
-        }
-        return true;
-    };
-
-    getPionX(){
-        return this.pion.getX();
-    }
-
-    getPionY(){
-        return this.pion.getY();
-    }
-
-    signDiffX(x){
-        if ((this.pion.getX() - x) > 0){
-            return -1;
-        }
-        if ((this.pion.getX() - x) == 0){
-            return 0
-        }
-        return 1;
-    }
-
-    signDiffY(y){
-        if ((this.pion.getY() - y) > 0){
-        return -0.5;
-        }
-        if((this.pion.getY() - y) == 0){
-            return 0;
-        }
-        return 0.5;
-    }
-
-    verifColor(x,y, color, colorpion){
-        return (colorpion != color.id);
-    }
-
-    init(namePlayer1, namePlayer2){
-        var Joueur = require('../src/Joueur');
-        var Pion = require('../src/Pion');
-        this.player = [];
-        this.player.push(new Joueur(namePlayer1));
-        this.player.push(new Joueur(namePlayer2));
-        this.pion = new Pion();
-        this.tokenPlayer = Math.floor(Math.random()*2);
-        console.log(this.tokenPlayer);
-        this.nbturn = 0;
-        this.movePlayer= 0;
-
-    }
-
-    changePlayer(){
-        this.movePlayer = 0;
-        this.tokenPlayer = (this.tokenPlayer == 1) ? 0 : 1;
-    }
-
-    winner(){
-        for (let i = 1;i<8;i++){
-            if(this.player[this.tokenPlayer].getTokenStack(i) == 7){
-                return true
-            }
-        }
-        return false;
-    }
-
-    getNbTurn(){
-        return this.nbturn;
-    }
-}
-
-module.exports = Engine;
-},{"../src/Joueur":"/src/Joueur.js","../src/Pion":"/src/Pion.js"}],"/src/Joueur.js":[function(require,module,exports){
-class Joueur{
-    constructor(name){
-        this.name = name;
-        this.score = 0;
-        this.tokenStack = [];
-        for (let i =1;i<8;i++){
-            this.tokenStack[i] = 0;
-        }
-    }
-    setName(name){
-        this.name = name;
-    }
-    getName(){
-        return this.name;
-    }
-    setScore(score){
-        this.score = score;
-    }
-    getScore(){
-        return this.score;
-    }
-    setTokenStack(id){
-        this.tokenStack[id]++;
-    }
-    getTokenStack(id){
-        return this.tokenStack[id];
-    }
-}
-
-module.exports = Joueur;
-},{}],"/src/Pion.js":[function(require,module,exports){
-class Pion {
-    constructor(){
-    }
-    getX(){
-        return this.x;
-    }
-    getY(){
-        return this.y;
-    }
-    setX(x){
-        this.x = x;
-    }
-    setY(y){
-        this.y = y;
-    }
-    setColor(color){
-        this.color = color;
-    }
-    getColor(){
-        return this.color;
-    }
-}
-
-module.exports = Pion;
-},{}],1:[function(require,module,exports){
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports = (function () {
 	/**
 	* Exports a constructor taking an options object.
@@ -1173,4 +614,562 @@ module.exports = (function () {
 	return HexGrid;
 })();
 
+},{}],"/src/App.js":[function(require,module,exports){
+var HexGrid = require('../assets/hex-grid');
+
+var invalidPos = ['0.0', '1.0.5', '2.0', '4.0', '5.0.5', '6.0', '7.0.5', '8.0', '0.1', '1.1.5', '8.1', '0.2', '8.2', '8.3', '0.5', '0.6', '7.6.5', '8.6', '0.7', '1.7.5', '3.7.5', '7.7.5', '8.7']
+
+var pieces = [
+    {
+        name : 'BLEU',
+        id: 1,
+		src: './img/blue.png',
+		nb: 7
+    },
+    {
+        name : 'JAUNE',
+        id: 2,
+        src: './img/yellow.png',
+        nb: 7
+    },
+    {
+        name : 'ROUGE',
+        id: 3,
+        src:'./img/red.png',
+        nb: 7
+	},
+	{
+        name : 'VERT',
+        id: 4,
+        src: './img/green.png',
+        nb: 7
+	},
+	{
+		name : 'VIOLET',
+		id: 5,
+		src: './img/purple.png',
+		nb: 7
+	},
+	{
+        name : 'ORANGE',
+		id: 6,
+		src: './img/orange.png',
+		nb: 7
+	},
+	{
+        name : 'BLANC',
+		id: 7,
+		src: './img/white.png',
+		nb: 7
+	}
+];
+
+var empty = {
+    name : 'EMPTY',
+    id: 0,
+    src: './img/empty.png',
+    nb: 0
+};
+
+var pion = {
+	name : 'PION',
+	src: './img/pion.png'
+};
+
+var colours = [];
+
+var initColors = function () {
+	pieces.forEach(function (piece) {
+		for (var i = 0; i< 7; i++){
+            colours.push(piece);
+		}
+	});
+
+    var j, x, i;
+    for (i = colours.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = colours[i];
+        colours[i] = colours[j];
+        colours[j] = x;
+    }
+};
+
+var TileFactory = function () {
+	var _id = 0;
+	return {
+		newTile: function () {
+			var tile = {
+				id: _id.toString()
+			};
+
+			_id += 1;
+			return tile;
+		},
+	};
+};
+
+/**
+ * Draws tiles by creating DOM elements.
+ * @param array options
+ * @param object options.parent Parent DOM element.
+ */
+function DomTileDrawer(options) {
+	if (typeof options === 'undefined') {
+		throw new Error('must provide an options object');
+	}
+
+	if (typeof options.parent !== 'object' ||
+		options.parent.hasOwnProperty('childNodes' === false)
+	) {
+		throw new Error('options.container must be an HTML element');
+	}
+
+	if (typeof options.tileSize !== 'number') {
+		throw new Error('options.tileSize must be a number');
+	}
+
+
+	this.tileSize = options.tileSize;
+	this.parent = options.parent;
+}
+
+DomTileDrawer.prototype.createDomTile = function(xPos, yPos) {
+	var hexWidth = this.tileSize * 2;
+	// 0.866 = (Math.sqrt(3) / 2);
+	// 0.7510 = 362 / 482
+	var tileHeight = hexWidth * 0.7510;
+
+	var tileDiv = document.createElement('div');
+	tileDiv.style.position = 'absolute';
+	tileDiv.style.width = hexWidth + 'px';
+	tileDiv.style.height = tileHeight + 'px';
+
+	tileDiv.style.left = (xPos * hexWidth * 0.75) + 'px';
+	tileDiv.style.top = (yPos * tileHeight) + 'px';
+
+	var tileImg = document.createElement('img');
+	tileImg.style.backgroundSize = hexWidth + 'px ' + tileHeight  + 'px';
+	tileImg.style.width = '100%';
+	tileImg.style.height = '100%';
+	this.parent.appendChild(tileDiv);
+	tileDiv.appendChild(tileImg)
+
+	return tileImg;
+};
+
+DomTileDrawer.prototype.setTileImage = function(element, imgFilename) {
+	if (typeof element !== 'object') {
+		throw new Error('element is not an object');
+	}
+
+	element.src = imgFilename;
+	element.style.backgroundImage = 'url(' + imgFilename + ')';
+};
+
+var tileFactory = new TileFactory();
+
+/**
+ * @param array options
+ * @param object options.container DOM element for the grid.
+ * @param object options.tileSize Tile height/width in pixels.
+ * @param object options.width Grid width in tiles.
+ * @param object options.height Grid height in tiles.
+ * @param object options.onAnimationComplete Callback for when animation
+ *        completes.
+ */
+function App(options) {
+	if (typeof options === 'undefined') {
+		throw new Error('must provide an options object');
+	}
+
+	if (typeof options.container !== 'object') {
+		throw new Error('options.container must be an HTML element');
+	}
+
+	this.container = options.container;
+
+	if (typeof options.tileSize !== 'number') {
+		throw new Error('options.tileSize must be a number');
+	}
+
+	if (typeof options.width !== 'number') {
+		throw new Error('options.width must be a number');
+	}
+
+	if (typeof options.height !== 'number') {
+		throw new Error('options.height must be a number');
+	}
+
+	this.width = options.width;
+	this.height = options.height;
+	this.tileSize = options.tileSize;
+	this.onAnimationComplete = options.onAnimationComplete;
+
+	this.hexGrid = new HexGrid({
+		width: options.width,
+		height: options.height,
+		orientation: 'flat-topped',
+		layout: 'odd-q',
+		tileFactory: tileFactory
+	});
+
+	this.dtd = new DomTileDrawer({
+		parent: options.container,
+		tileSize: this.tileSize
+	});
+
+
+
+	initColors();
+
+	var iter = this.hexGrid.getTileIterator();
+	var tile = iter.next();
+	var tilePos, pos, i = 0;
+	while (tile !== null) {
+		tilePos = this.hexGrid.getPositionById(tile.id);
+		pos = tilePos.x + '.' + tilePos.y;
+		if (!invalidPos.includes(pos)){
+			tile.element = this.dtd.createDomTile(tilePos.x, tilePos.y);
+            tile.color = colours[i];
+			this.dtd.setTileImage(
+				tile.element,
+				tile.color.src
+			);
+			i++;
+		}
+		tile = iter.next();
+	}
+
+	var Engine = require('../src/Engine')
+    this.engine = new Engine();
+	this.engine.init("Théo","Grishka");
+
+	this.attachMouseEvents();
+}
+
+App.prototype.getTileColorByPos = function(x, y) {
+	// Results in a dark border.
+	console.log(x);
+	console.log(y);
+    return this.hexGrid.getTileByCoords(x,y).color;
+};
+
+
+App.prototype.attachMouseEvents = function() {
+	var iter = this.hexGrid.getTileIterator();
+	var tile = iter.next();
+	while (tile !== null) {
+		tilePos = this.hexGrid.getPositionById(tile.id);
+		pos = tilePos.x + '.' + tilePos.y;
+		if (!invalidPos.includes(pos)) {
+			tile.element.addEventListener("click", onTileClick, false);
+			tile.element.myParam1 = tile;
+			tile.element.myParam1.posX = tilePos.x;
+			tile.element.myParam1.posY = tilePos.y;
+			tile.element.myEngine = this.engine;
+            tile.element.myApp = this;
+		}
+		tile = iter.next();
+	}
+};
+
+var onTileClick = function(evt) {
+
+	var x = evt.target.myParam1.posX
+	var y = evt.target.myParam1.posY
+	var myEngine = evt.target.myEngine
+	var myApp = evt.target.myApp
+
+	console.log(myApp.hexGrid.getTileByCoords(x,y));
+
+	var nbturn = myEngine.getNbTurn();
+	var pionX = myEngine.getPionX();
+	var pionY = myEngine.getPionY();
+
+    if (myEngine.move(x,y,myApp.getTileColorByPos(x,y))){
+    	console.log("tour");
+        myApp.dtd.setTileImage(myApp.hexGrid.getTileByCoords(x,y).element, pion.src );
+		
+        if (nbturn > 0){
+            myApp.dtd.setTileImage(myApp.hexGrid.getTileByCoords(pionX,pionY).element, empty.src );
+		}
+	}
+};
+
+App.prototype.animateLeftToRight = function() {
+	var iter = this.hexGrid.getTileIterator();
+	var tile = iter.next();
+	var animationInterval;
+
+	tilePos = this.hexGrid.getPositionById(tile.id);
+	pos = tilePos.x + '.' + tilePos.y;
+
+	var animate = function() {
+		if (tile === null || !invalidPos.includes(pos)) {
+			window.clearInterval(animationInterval);
+			this.animationComplete();
+			return;
+		}
+
+		//this.dtd.setTileImage(tile.element, './img/dark-circle.png');
+		tile = iter.next();
+	}.bind(this);
+
+	animationInterval = window.setInterval(animate, 50);
+};
+
+App.prototype.animationComplete = function() {
+	if (typeof this.onAnimationComplete === 'function') {
+		this.onAnimationComplete.call(null, this);
+	}
+};
+
+module.exports = App;
+},{"../assets/hex-grid":1,"../src/Engine":"/src/Engine.js"}],"/src/Engine.js":[function(require,module,exports){
+let pieces = [
+    {
+        name : 'VIDE',
+        id: 0,
+        src: './img/blue.png',
+        nb: 7
+    },
+    {
+        name : 'BLEU',
+        id: 1,
+        src: './img/blue.png',
+        nb: 7
+    },
+    {
+        name : 'JAUNE',
+        id: 2,
+        src: './img/yellow.png',
+        nb: 7
+    },
+    {
+        name : 'ROUGE',
+        id: 3,
+        src:'./img/red.png',
+        nb: 7
+    },
+    {
+        name : 'VERT',
+        id: 4,
+        src: './img/green.png',
+        nb: 7
+    },
+    {
+        name : 'VIOLET',
+        id: 5,
+        src: './img/purple.png',
+        nb: 7
+    },
+    {
+        name : 'ORANGE',
+        id: 6,
+        src: './img/orange.png',
+        nb: 7
+    },
+    {
+        name : 'BLANC',
+        id: 7,
+        src: './img/white.png',
+        nb: 7
+    }
+];
+
+let pion= { id : 0, src : './img/pion.png'};
+
+class Engine {
+    constructor(){
+    }
+
+    move(x,y, color){
+        console.log(this.nbturn);
+        if (this.nbturn == 0){
+            this.turn(x,y,color);
+            //this.changePlayer();
+            return true;
+        }
+        debugger;
+        if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y,color)) {
+            if (this.movePlayer > 0) {
+                if (!this.verifColor(color, this.pion.getColor())) {
+                    return false;
+                }
+            }
+            this.turn(x, y, color);
+            this.movePlayer++;
+            return true;
+           /* if(this.winner()){
+                return true;
+            }*/
+            //this.changePlayer();
+        }
+        return false;
+    }
+
+    turn(x,y, color) {
+        this.pion.setX(x);
+        this.pion.setY(y);
+        console.log(color);
+        this.pion.setColor(color.id);
+        this.player[this.tokenPlayer].setTokenStack(color.id);
+        this.nbturn++;
+    }
+
+    verifPosition(x,y){
+        return (this.verifColonne(x,y)
+                || this.verifLigne(x,y)
+                || this.verifDiagonal(x,y));
+    }
+
+    verifLigne(x,y){
+        return (y == this.pion.getY() && x != this.pion.getX());
+    }
+
+    verifColonne(x,y){
+        return (y != this.pion.getY() && x == this.pion.getX());
+    }
+
+    verifDiagonal(x,y) {
+        return (Math.abs(x - this.pion.getX()) == Math.abs(y - this.pion.getY())*2)
+    }
+
+    verifNoPieceBefore(x,y, color){
+        let positionX = this.pion.getX();
+        let positionY = this.pion.getY();
+        let signDiffX = this.signDiffX(x,y);
+        let signDiffY = this.signDiffY(x,y);
+        while(x != positionX && y != positionY){
+            if (color.id !== pieces[this.pion.getColor()].id){
+                return false;
+            }
+            positionX += signDiffX;
+            positionY += signDiffY;
+        }
+        return true;
+    };
+
+    getPionX(){
+        return this.pion.getX();
+    }
+
+    getPionY(){
+        return this.pion.getY();
+    }
+
+    signDiffX(x){
+        if ((this.pion.getX() - x) > 0){
+            return -1;
+        }
+        if ((this.pion.getX() - x) == 0){
+            return 0
+        }
+        return 1;
+    }
+
+    signDiffY(y){
+        if ((this.pion.getY() - y) > 0){
+        return -0.5;
+        }
+        if((this.pion.getY() - y) == 0){
+            return 0;
+        }
+        return 0.5;
+    }
+
+    verifColor(color, colorpion){
+        return (colorpion == color.id);
+    }
+
+    init(namePlayer1, namePlayer2){
+        var Joueur = require('../src/Joueur');
+        var Pion = require('../src/Pion');
+        this.player = [];
+        this.player.push(new Joueur(namePlayer1));
+        this.player.push(new Joueur(namePlayer2));
+        this.pion = new Pion();
+        this.tokenPlayer = Math.floor(Math.random()*2);
+        console.log(this.tokenPlayer);
+        this.nbturn = 0;
+        this.movePlayer= 0;
+
+    }
+
+    changePlayer(){
+        this.movePlayer = 0;
+        this.tokenPlayer = (this.tokenPlayer == 1) ? 0 : 1;
+    }
+
+    winner(){
+        for (let i = 1;i<8;i++){
+            if(this.player[this.tokenPlayer].getTokenStack(i) == 7){
+                return true
+            }
+        }
+        return false;
+    }
+
+    getNbTurn(){
+        return this.nbturn;
+    }
+}
+
+module.exports = Engine;
+},{"../src/Joueur":"/src/Joueur.js","../src/Pion":"/src/Pion.js"}],"/src/Joueur.js":[function(require,module,exports){
+class Joueur{
+    constructor(name){
+        this.name = name;
+        this.score = 0;
+        this.tokenStack = [];
+        for (let i =1;i<8;i++){
+            this.tokenStack[i] = 0;
+        }
+    }
+    setName(name){
+        this.name = name;
+    }
+    getName(){
+        return this.name;
+    }
+    setScore(score){
+        this.score = score;
+    }
+    getScore(){
+        return this.score;
+    }
+    setTokenStack(id){
+        this.tokenStack[id]++;
+    }
+    getTokenStack(id){
+        return this.tokenStack[id];
+    }
+}
+
+module.exports = Joueur;
+},{}],"/src/Pion.js":[function(require,module,exports){
+class Pion {
+    constructor(){
+    }
+    getX(){
+        return this.x;
+    }
+    getY(){
+        return this.y;
+    }
+    setX(x){
+        this.x = x;
+    }
+    setY(y){
+        this.y = y;
+    }
+    setColor(color){
+        this.color = color;
+    }
+    getColor(){
+        return this.color;
+    }
+}
+
+module.exports = Pion;
 },{}]},{},[]);

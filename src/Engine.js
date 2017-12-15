@@ -64,7 +64,7 @@ class Engine {
         }
         if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y,color)) {
             if (this.movePlayer > 0) {
-                if (!this.verifColor(x, y, color, this.pion.getColor())) {
+                if (!this.verifColor(color, this.pion.getColor())) {
                     return false;
                 }
             }
@@ -149,8 +149,8 @@ class Engine {
         return 0.5;
     }
 
-    verifColor(x,y, color, colorpion){
-        return (colorpion != color.id);
+    verifColor(color, colorpion){
+        return (colorpion == color.id);
     }
 
     init(namePlayer1, namePlayer2){
