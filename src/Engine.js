@@ -49,14 +49,13 @@ let pieces = [
     }
 ];
 
-let pion= { id : 0, src : './img/pion.png'}
+let pion= { id : 0, src : './img/pion.png'};
 
 class Engine {
     constructor(){
     }
 
     move(x,y, color){
-
         console.log(this.nbturn);
         if (this.nbturn == 0){
             this.turn(x,y,color);
@@ -71,6 +70,7 @@ class Engine {
             }
             this.turn(x, y, color);
             this.movePlayer++;
+            return true;
            /* if(this.winner()){
                 return true;
             }*/
@@ -84,7 +84,7 @@ class Engine {
         this.pion.setY(y);
         console.log(color);
         this.pion.setColor(color.id);
-        this.player[this.tokenPlayer].setTokenStack(color.id)
+        this.player[this.tokenPlayer].setTokenStack(color.id);
         this.nbturn++;
     }
 

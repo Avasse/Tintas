@@ -261,8 +261,7 @@ var onTileClick = function(evt) {
 	console.log(evt.target.myApp.hexGrid.getTileByCoords(evt.target.myParam1.posX,evt.target.myParam1.posY));
     if (evt.target.myEngine.move(evt.target.myParam1.posX,evt.target.myParam1.posY,evt.target.myApp.getTileColorByPos(evt.target.myParam1.posX,evt.target.myParam1.posY))){
     	console.log("tour");
-        evt.target.myApp.dtd.setTileImage(evt.target.myApp.hexGrid.getTileByCoords(evt.target.myParam1.posX,evt.target.myParam1.posY).element, pion.src )
-
+        evt.target.myApp.dtd.setTileImage(evt.target.myApp.hexGrid.getTileByCoords(evt.target.myParam1.posX,evt.target.myParam1.posY).element, pion.src );
 	}
 };
 
