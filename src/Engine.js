@@ -59,7 +59,7 @@ class Engine {
         console.log(this.nbturn);
         if (this.nbturn == 0){
             this.turn(x,y,color);
-            this.changePlayer();
+            //this.changePlayer();
             return true;
         }
         if(this.verifPosition(x,y) && this.verifNoPieceBefore(x,y,color)) {
@@ -103,7 +103,8 @@ class Engine {
     }
 
     verifDiagonal(x,y) {
-        return (Math.abs(x - this.pion.getX()) == Math.abs(y - this.pion.getY()))
+        debugger;
+        return (Math.abs(x - this.pion.getX()) == Math.abs(y - this.pion.getY())*2)
     }
 
     verifNoPieceBefore(x,y, color){
@@ -112,7 +113,7 @@ class Engine {
         let signDiffX = this.signDiffX(x,y);
         let signDiffY = this.signDiffY(x,y);
         while(x != positionX && y != positionY){
-            if (color.id !== pieces[0].id){
+            if (color.id !== pieces[this.pion.getColor()].id){
                 return false;
             }
             positionX += signDiffX;
@@ -133,12 +134,12 @@ class Engine {
 
     signDiffY(y){
         if ((this.pion.getY() - y) > 0){
-        return -1;
+        return -0.5;
         }
         if((this.pion.getY() - y) == 0){
             return 0;
         }
-        return 1;
+        return 0.5;
     }
 
     verifColor(x,y, color, colorpion){
