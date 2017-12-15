@@ -251,16 +251,21 @@ App.prototype.attachMouseEvents = function() {
 			tile.element.myParam1.posX = tilePos.x;
 			tile.element.myParam1.posY = tilePos.y;
 			tile.element.myEngine = this.engine;
-            tile.element.myApp = this;
+			tile.element.myApp = this;
 		}
 		tile = iter.next();
 	}
-};
+	var buttonEndTurn = document.getElementById("button-end");
+	buttonEndTurn.Engine = this.engine;
+	buttonEndTurn.addEventListener("click", onButtonEndClick);
+}; 
+
+var onButtonEndClick = function(evt) {
+	var engine = evt.target.offsetParent.Engine;
+	engine.changePlayer();	
+}
 
 var onTileClick = function(evt) {
-
-	console.log(evt.element.myParam1)
-	var tile = evt.element.myParam1
 	var x = evt.target.myParam1.posX
 	var y = evt.target.myParam1.posY
 	var myEngine = evt.target.myEngine
@@ -399,7 +404,6 @@ class Engine {
         console.log(color);
         this.pion.setColor(color.id);
         this.player[this.tokenPlayer].setTokenStack(color.id);
-        this.nbturn++;
     }
 
     verifPosition(x,y){
@@ -470,9 +474,9 @@ class Engine {
     init(namePlayer1, namePlayer2){
         var Joueur = require('../src/Joueur');
         var Pion = require('../src/Pion');
-        this.player = [];
-        this.player.push(new Joueur(namePlayer1));
-        this.player.push(new Joueur(namePlayer2));
+        this.players = [];
+        this.players.push(new Joueur(namePlayer1));
+        this.players.push(new Joueur(namePlayer2));
         this.pion = new Pion();
         this.tokenPlayer = Math.floor(Math.random()*2);
         console.log(this.tokenPlayer);
@@ -484,6 +488,7 @@ class Engine {
     changePlayer(){
         this.movePlayer = 0;
         this.tokenPlayer = (this.tokenPlayer == 1) ? 0 : 1;
+        this.nbturn++;
     }
 
     winner(){
@@ -497,6 +502,10 @@ class Engine {
 
     getNbTurn(){
         return this.nbturn;
+    }
+
+    getPlayer() {
+        return this.tokenPlayer;
     }
 }
 

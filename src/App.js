@@ -250,15 +250,21 @@ App.prototype.attachMouseEvents = function() {
 			tile.element.myParam1.posX = tilePos.x;
 			tile.element.myParam1.posY = tilePos.y;
 			tile.element.myEngine = this.engine;
-            tile.element.myApp = this;
+			tile.element.myApp = this;
 		}
 		tile = iter.next();
 	}
-};
+	var buttonEndTurn = document.getElementById("button-end");
+	buttonEndTurn.Engine = this.engine;
+	buttonEndTurn.addEventListener("click", onButtonEndClick);
+}; 
+
+var onButtonEndClick = function(evt) {
+	var engine = evt.target.offsetParent.Engine;
+	engine.changePlayer();	
+}
 
 var onTileClick = function(evt) {
-
-	var tile = evt.target.element.myParam1
 	var x = evt.target.myParam1.posX
 	var y = evt.target.myParam1.posY
 	var myEngine = evt.target.myEngine
